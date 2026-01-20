@@ -6,6 +6,8 @@ swift package dump-packageのJSON出力を解析し、
 subgraph付きMermaid形式のグラフを生成する
 """
 
+from __future__ import annotations
+
 import json
 import subprocess
 import sys
@@ -31,18 +33,14 @@ def get_package_json(package_dir: Path) -> dict:
     return json.loads(result.stdout)
 
 
-def get_category_from_path(path: str) -> str:
-    """pathからカテゴリを判定"""
-    if path.startswith("Sources/Core/"):
-        return "Core"
-    elif path.startswith("Sources/Descriptor/"):
-        return "Descriptor"
-    elif path.startswith("Sources/Feature/"):
+def get_category_from_path(path: str) -> str | None:
+    """pathからカテゴリを判定（Feature, Portのみグループ化）"""
+    if path.startswith("Sources/Feature/"):
         return "Feature"
-    elif path.startswith("Tests/"):
-        return "Tests"
+    elif path.startswith("Sources/Port/"):
+        return "Port"
     else:
-        return "Other"
+        return None
 
 
 def extract_target_dependencies(target: dict) -> list[str]:
@@ -64,7 +62,7 @@ def generate_mermaid(package: dict) -> str:
     """Mermaid形式のグラフを生成"""
     targets = package.get("targets", [])
 
-    # カテゴリ別にターゲットをグループ化
+    # カテゴリ別にターゲットを分類
     categories: dict[str, list[str]] = defaultdict(list)
     # ターゲット名のセット（内部ターゲット判定用）
     target_names: set[str] = set()
@@ -77,7 +75,8 @@ def generate_mermaid(package: dict) -> str:
         target_names.add(name)
 
         category = get_category_from_path(path)
-        categories[category].append(name)
+        if category:
+            categories[category].append(name)
 
         # 依存関係を抽出
         for dep in extract_target_dependencies(target):
@@ -86,11 +85,11 @@ def generate_mermaid(package: dict) -> str:
     # Mermaid出力を構築
     lines = ["graph TD"]
 
-    # カテゴリの出力順序を定義
-    category_order = ["Core", "Descriptor", "Feature", "Tests", "Other"]
+    # カテゴリの出力順序
+    category_order = ["Port", "Feature"]
 
     for category in category_order:
-        if category in categories and categories[category]:
+        if categories[category]:
             lines.append(f"  subgraph {category}")
             for target in sorted(categories[category]):
                 lines.append(f"    {target}")
