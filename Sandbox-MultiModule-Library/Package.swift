@@ -30,7 +30,9 @@ let package = Package(
         .Descriptor.feature,
         .Descriptor.infra,
         .Feature.searchRepository,
-        .Feature.repositoryDetail
+        .Feature.repositoryDetail,
+        .Tests.Core.domain,
+        .Tests.Core.infra
     ]
 )
 
@@ -38,6 +40,10 @@ extension Target {
     enum Core {}
     enum Descriptor {}
     enum Feature {}
+
+    enum Tests {
+        enum Core {}
+    }
 }
 
 extension Target.Dependency {
@@ -95,6 +101,10 @@ extension Target.Dependency.Core {
 
     static var domain: Target.Dependency {
         .target(name: Target.Core.domain.name)
+    }
+
+    static var infra: Target.Dependency {
+        .target(name: Target.Core.infra.name)
     }
 
     static var model: Target.Dependency {
@@ -168,6 +178,25 @@ extension Target.Feature {
                 .Descriptor.feature
             ],
             path: "Sources/Feature/RepositoryDetail"
+        )
+    }
+}
+
+// MARK: - Tests
+extension Target.Tests.Core {
+    static var domain: Target {
+        .testTarget(
+            name: "DomainTests",
+            dependencies: [.Core.domain],
+            path: "Tests/Core/Domain"
+        )
+    }
+
+    static var infra: Target {
+        .testTarget(
+            name: "InfraTests",
+            dependencies: [.Core.infra],
+            path: "Tests/Core/Infra"
         )
     }
 }
