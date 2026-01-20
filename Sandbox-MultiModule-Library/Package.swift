@@ -147,7 +147,11 @@ extension Target.Descriptor {
     static var infra: Target {
         .target(
             name: "InfraDescriptor",
-            dependencies: [.Core.model],
+            dependencies: [
+                .Core.model,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
             path: "Sources/Descriptor/Infra"
         )
     }
@@ -249,6 +253,10 @@ extension Package.Dependency {
 extension Target.Dependency.ExternalLibrary {
     static var dependencies: Target.Dependency {
         .product(name: "Dependencies", package: "swift-dependencies")
+    }
+
+    static var dependenciesMacros: Target.Dependency {
+        .product(name: "DependenciesMacros", package: "swift-dependencies")
     }
 
     static var openAPIRuntime: Target.Dependency {
