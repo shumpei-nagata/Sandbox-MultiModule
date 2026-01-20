@@ -7,10 +7,11 @@
 
 import Dependencies
 import DependenciesMacros
+import Model
 
 @DependencyClient
 public struct SearchRepositoryUseCase: Sendable {
-    public var execute: @Sendable (_ query: String) async throws -> [String]
+    public var execute: @Sendable (_ query: String) async throws -> [SearchResultItem]
 }
 
 // MARK: - TestDependencyKey
