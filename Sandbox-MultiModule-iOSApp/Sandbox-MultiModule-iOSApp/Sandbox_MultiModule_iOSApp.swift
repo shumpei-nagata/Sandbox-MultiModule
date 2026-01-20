@@ -11,11 +11,11 @@ import SwiftUI
 
 @main
 struct Sandbox_MultiModule_iOSApp: App {
-    @Dependency(\.searchRepositoryViewBuilder) private var searchRepositoryViewBuilder
+    @Dependency(\.searchRepositoryViewBuilder.build) private var searchRepositoryView
 
     var body: some Scene {
         WindowGroup {
-            AnyView(searchRepositoryViewBuilder.build())
+            searchRepositoryView()
         }
     }
 }

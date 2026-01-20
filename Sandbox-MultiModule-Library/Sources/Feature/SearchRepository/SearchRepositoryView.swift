@@ -13,30 +13,33 @@ import SwiftUI
 
 struct SearchRepositoryView: View {
     @State private var viewModel = SearchRepositoryViewModel()
+    @Dependency(\.repositoryDetailViewBuilder.build) private var repositoryDetailView
 
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.repositories) { repository in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(repository.fullName)
-                            .font(.headline)
-                        if let description = repository.description {
-                            Text(description)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
-                        }
-                        HStack(spacing: 12) {
-                            Label("\(repository.stargazersCount)", systemImage: "star")
-                            if let language = repository.language {
-                                Text(language)
+                    NavigationLink(value: repository) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(repository.fullName)
+                                .font(.headline)
+                            if let description = repository.description {
+                                Text(description)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
                             }
+                            HStack(spacing: 12) {
+                                Label("\(repository.stargazersCount)", systemImage: "star")
+                                if let language = repository.language {
+                                    Text(language)
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                         }
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 4)
                 }
             }
             .overlay {
@@ -50,6 +53,9 @@ struct SearchRepositoryView: View {
                 }
             }
             .navigationTitle("Search Repositories")
+            .navigationDestination(for: SearchResultItem.self) {
+                AnyView(repositoryDetailView($0))
+            }
             .searchable(text: $viewModel.query, prompt: "Search repositories")
             .onSubmit(of: .search) {
                 Task {
@@ -94,7 +100,7 @@ final class SearchRepositoryViewModel {
 extension SearchRepositoryViewBuilder: DependencyKey {
     public static let liveValue = Self(
         build: {
-            SearchRepositoryView()
+            .init(SearchRepositoryView())
         }
     )
 }

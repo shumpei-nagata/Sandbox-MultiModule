@@ -210,7 +210,8 @@ extension Target.Feature {
                 .Core.model,
                 .Core.designSystem,
                 .Descriptor.domain,
-                .Descriptor.feature
+                .Descriptor.feature,
+                .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/RepositoryDetail",
             swiftSettings: [.strictConcurrency]

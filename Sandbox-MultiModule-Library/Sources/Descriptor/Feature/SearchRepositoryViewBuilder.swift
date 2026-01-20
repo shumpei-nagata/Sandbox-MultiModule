@@ -11,8 +11,8 @@ import SwiftUI
 
 @DependencyClient
 public struct SearchRepositoryViewBuilder: Sendable {
-    public var build: @Sendable @MainActor () -> any View = {
-        EmptyView()
+    public var build: @Sendable @MainActor () -> AnyView = {
+        .init(EmptyView())
     }
 }
 
