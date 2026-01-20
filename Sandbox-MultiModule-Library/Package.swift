@@ -11,8 +11,10 @@ let package = Package(
         .library(
             name: "Sandbox-MultiModule-Library",
             targets: [
-                Target.Core.model.name,
-                Target.Descriptor.feature.name
+                Target.Core.domain.name,
+                Target.Core.infra.name,
+                Target.Feature.searchRepository.name,
+                Target.Feature.repositoryDetail.name,
             ]
         ),
     ],
@@ -81,7 +83,7 @@ extension Target.Core {
         )
     }
 
-    static var infra: Target{
+    static var infra: Target {
         .target(
             name: "Infra",
             dependencies: [
