@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5E2CD3E72F1F460900D867F4 /* Sandbox-MultiModule-Library in Frameworks */ = {isa = PBXBuildFile; productRef = 5E2CD3E62F1F460900D867F4 /* Sandbox-MultiModule-Library */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5E72FB1C2F1E4B290022D77E /* Sandbox-MultiModule-Library */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "Sandbox-MultiModule-Library"; path = "../Sandbox-MultiModule-Library"; sourceTree = SOURCE_ROOT; };
 		5EE57BDD2F1E496000F3C209 /* Sandbox-MultiModule-iOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sandbox-MultiModule-iOSApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,17 +28,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E2CD3E72F1F460900D867F4 /* Sandbox-MultiModule-Library in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E2CD3E52F1F460900D867F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5EE57BD42F1E496000F3C209 = {
 			isa = PBXGroup;
 			children = (
 				5E72FB1C2F1E4B290022D77E /* Sandbox-MultiModule-Library */,
 				5EE57BDF2F1E496000F3C209 /* Sandbox-MultiModule-iOSApp */,
+				5E2CD3E52F1F460900D867F4 /* Frameworks */,
 				5EE57BDE2F1E496000F3C209 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +80,7 @@
 			);
 			name = "Sandbox-MultiModule-iOSApp";
 			packageProductDependencies = (
+				5E2CD3E62F1F460900D867F4 /* Sandbox-MultiModule-Library */,
 			);
 			productName = "Sandbox-MultiModule-iOSApp";
 			productReference = 5EE57BDD2F1E496000F3C209 /* Sandbox-MultiModule-iOSApp.app */;
@@ -185,6 +199,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -238,6 +253,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -277,7 +293,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
@@ -319,7 +335,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
@@ -347,6 +363,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5E2CD3E62F1F460900D867F4 /* Sandbox-MultiModule-Library */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "Sandbox-MultiModule-Library";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5EE57BD52F1E496000F3C209 /* Project object */;
 }

@@ -148,7 +148,11 @@ extension Target.Descriptor {
     static var feature: Target {
         .target(
             name: "FeatureDescriptor",
-            dependencies: [.Core.model],
+            dependencies: [
+                .Core.model,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
             path: "Sources/Descriptor/Feature",
             swiftSettings: [.strictConcurrency]
         )
