@@ -17,7 +17,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .swiftDependencies
+        .swiftDependencies,
+        .swiftOpenAPIGenerator,
+        .swiftOpenAPIRuntime,
+        .swiftOpenAPIURLSession
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -52,6 +55,10 @@ extension Target.Dependency {
     enum ExternalLibrary {}
 }
 
+extension Target.PluginUsage {
+    enum ExternalLibrary {}
+}
+
 // MARK: - Core
 extension Target.Core {
     static var designSystem: Target {
@@ -68,7 +75,7 @@ extension Target.Core {
                 .Core.model,
                 .Descriptor.domain,
                 .Descriptor.infra,
-                .ExternalLibrary.swiftDependencies
+                .ExternalLibrary.dependencies
             ],
             path: "Sources/Core/Domain"
         )
@@ -80,9 +87,14 @@ extension Target.Core {
             dependencies: [
                 .Core.model,
                 .Descriptor.infra,
-                .ExternalLibrary.swiftDependencies
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.openAPIRuntime,
+                .ExternalLibrary.openAPIURLSession
             ],
-            path: "Sources/Core/Infra"
+            path: "Sources/Core/Infra",
+            plugins: [
+                .ExternalLibrary.openAPIGenerator
+            ]
         )
     }
 
@@ -206,13 +218,48 @@ extension Package.Dependency {
     static var swiftDependencies: Package.Dependency {
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",
-            exact: "1.10.1"
+            from: "1.10.1"
+        )
+    }
+
+    static var swiftOpenAPIGenerator: Package.Dependency {
+        .package(
+            url: "https://github.com/apple/swift-openapi-generator",
+            from: "1.10.4"
+        )
+    }
+
+    static var swiftOpenAPIRuntime: Package.Dependency {
+        .package(
+            url: "https://github.com/apple/swift-openapi-runtime",
+            from: "1.9.0"
+        )
+    }
+
+    static var swiftOpenAPIURLSession: Package.Dependency {
+        .package(
+            url: "https://github.com/apple/swift-openapi-urlsession",
+            from: "1.2.0"
         )
     }
 }
 
 extension Target.Dependency.ExternalLibrary {
-    static var swiftDependencies: Target.Dependency {
+    static var dependencies: Target.Dependency {
         .product(name: "Dependencies", package: "swift-dependencies")
+    }
+
+    static var openAPIRuntime: Target.Dependency {
+        .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime")
+    }
+
+    static var openAPIURLSession: Target.Dependency {
+        .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession")
+    }
+}
+
+extension Target.PluginUsage.ExternalLibrary {
+    static var openAPIGenerator: Target.PluginUsage {
+        .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
     }
 }
