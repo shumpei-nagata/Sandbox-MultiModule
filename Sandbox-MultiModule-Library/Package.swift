@@ -66,7 +66,8 @@ extension Target.Core {
     static var designSystem: Target {
         .target(
             name: "DesignSystem",
-            path: "Sources/Core/DesignSystem"
+            path: "Sources/Core/DesignSystem",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -79,7 +80,8 @@ extension Target.Core {
                 .Descriptor.infra,
                 .ExternalLibrary.dependencies
             ],
-            path: "Sources/Core/Domain"
+            path: "Sources/Core/Domain",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -94,6 +96,7 @@ extension Target.Core {
                 .ExternalLibrary.openAPIURLSession
             ],
             path: "Sources/Core/Infra",
+            swiftSettings: [.strictConcurrency],
             plugins: [
                 .ExternalLibrary.openAPIGenerator
             ]
@@ -103,7 +106,8 @@ extension Target.Core {
     static var model: Target {
         .target(
             name: "Model",
-            path: "Sources/Core/Model"
+            path: "Sources/Core/Model",
+            swiftSettings: [.strictConcurrency]
         )
     }
 }
@@ -131,8 +135,13 @@ extension Target.Descriptor {
     static var domain: Target {
         .target(
             name: "DomainDescriptor",
-            dependencies: [.Core.model],
-            path: "Sources/Descriptor/Domain"
+            dependencies: [
+                .Core.model,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
+            path: "Sources/Descriptor/Domain",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -140,7 +149,8 @@ extension Target.Descriptor {
         .target(
             name: "FeatureDescriptor",
             dependencies: [.Core.model],
-            path: "Sources/Descriptor/Feature"
+            path: "Sources/Descriptor/Feature",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -152,7 +162,8 @@ extension Target.Descriptor {
                 .ExternalLibrary.dependencies,
                 .ExternalLibrary.dependenciesMacros
             ],
-            path: "Sources/Descriptor/Infra"
+            path: "Sources/Descriptor/Infra",
+            swiftSettings: [.strictConcurrency]
         )
     }
 }
@@ -180,9 +191,11 @@ extension Target.Feature {
                 .Core.model,
                 .Core.designSystem,
                 .Descriptor.domain,
-                .Descriptor.feature
+                .Descriptor.feature,
+                .ExternalLibrary.dependencies
             ],
-            path: "Sources/Feature/SearchRepository"
+            path: "Sources/Feature/SearchRepository",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -195,7 +208,8 @@ extension Target.Feature {
                 .Descriptor.domain,
                 .Descriptor.feature
             ],
-            path: "Sources/Feature/RepositoryDetail"
+            path: "Sources/Feature/RepositoryDetail",
+            swiftSettings: [.strictConcurrency]
         )
     }
 }
@@ -206,7 +220,8 @@ extension Target.Tests.Core {
         .testTarget(
             name: "DomainTests",
             dependencies: [.Core.domain],
-            path: "Tests/Core/Domain"
+            path: "Tests/Core/Domain",
+            swiftSettings: [.strictConcurrency]
         )
     }
 
@@ -214,7 +229,8 @@ extension Target.Tests.Core {
         .testTarget(
             name: "InfraTests",
             dependencies: [.Core.infra],
-            path: "Tests/Core/Infra"
+            path: "Tests/Core/Infra",
+            swiftSettings: [.strictConcurrency]
         )
     }
 }
@@ -271,5 +287,12 @@ extension Target.Dependency.ExternalLibrary {
 extension Target.PluginUsage.ExternalLibrary {
     static var openAPIGenerator: Target.PluginUsage {
         .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
+    }
+}
+
+// MARK: - Swift Settings
+extension SwiftSetting {
+    static var strictConcurrency: Self {
+        .enableUpcomingFeature("StrictConcurrency")
     }
 }
