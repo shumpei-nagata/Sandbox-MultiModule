@@ -5,9 +5,9 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Dependencies
+public import Dependencies
 import DependenciesMacros
-import Model
+public import Model
 
 @DependencyClient
 public struct SearchRepositoryUseCase: Sendable {

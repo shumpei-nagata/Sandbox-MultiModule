@@ -5,9 +5,9 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Dependencies
+public import Dependencies
 import DomainDescriptor
-import FeatureDescriptor
+public import FeatureDescriptor
 import Model
 import SwiftUI
 

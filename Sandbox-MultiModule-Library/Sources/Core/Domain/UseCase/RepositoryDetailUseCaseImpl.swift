@@ -5,8 +5,8 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Dependencies
-import DomainDescriptor
+public import Dependencies
+public import DomainDescriptor
 import InfraDescriptor
 
 // MARK: - DependencyKey

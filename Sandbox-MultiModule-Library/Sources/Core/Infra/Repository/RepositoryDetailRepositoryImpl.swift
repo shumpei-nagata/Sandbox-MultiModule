@@ -5,9 +5,9 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Dependencies
+public import Dependencies
 import Foundation
-import InfraDescriptor
+public import InfraDescriptor
 import Model
 import OpenAPIRuntime
 import OpenAPIURLSession

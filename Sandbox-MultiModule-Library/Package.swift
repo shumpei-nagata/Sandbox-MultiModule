@@ -67,7 +67,7 @@ extension Target.Core {
         .target(
             name: "DesignSystem",
             path: "Sources/Core/DesignSystem",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -81,7 +81,7 @@ extension Target.Core {
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Core/Domain",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -96,7 +96,7 @@ extension Target.Core {
                 .ExternalLibrary.openAPIURLSession
             ],
             path: "Sources/Core/Infra",
-            swiftSettings: [.strictConcurrency],
+            swiftSettings: .allUpcomingFeatures,
             plugins: [
                 .ExternalLibrary.openAPIGenerator
             ]
@@ -107,7 +107,7 @@ extension Target.Core {
         .target(
             name: "Model",
             path: "Sources/Core/Model",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 }
@@ -141,7 +141,7 @@ extension Target.Descriptor {
                 .ExternalLibrary.dependenciesMacros
             ],
             path: "Sources/Descriptor/Domain",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -154,7 +154,7 @@ extension Target.Descriptor {
                 .ExternalLibrary.dependenciesMacros
             ],
             path: "Sources/Descriptor/Feature",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -167,7 +167,7 @@ extension Target.Descriptor {
                 .ExternalLibrary.dependenciesMacros
             ],
             path: "Sources/Descriptor/Infra",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 }
@@ -199,7 +199,7 @@ extension Target.Feature {
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/SearchRepository",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -214,7 +214,7 @@ extension Target.Feature {
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/RepositoryDetail",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 }
@@ -226,7 +226,7 @@ extension Target.Tests.Core {
             name: "DomainTests",
             dependencies: [.Core.domain],
             path: "Tests/Core/Domain",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 
@@ -235,7 +235,7 @@ extension Target.Tests.Core {
             name: "InfraTests",
             dependencies: [.Core.infra],
             path: "Tests/Core/Infra",
-            swiftSettings: [.strictConcurrency]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 }
@@ -296,8 +296,25 @@ extension Target.PluginUsage.ExternalLibrary {
 }
 
 // MARK: - Swift Settings
+// ref: https://github.com/treastrain/swift-upcomingfeatureflags-cheatsheet
 extension SwiftSetting {
-    static var strictConcurrency: Self {
-        .enableUpcomingFeature("StrictConcurrency")
-    }
+    static let existentialAny: Self = .enableUpcomingFeature("ExistentialAny")                                    // SE-0335, Swift 5.6,  SwiftPM 5.8+
+    static let internalImportsByDefault: Self = .enableUpcomingFeature("InternalImportsByDefault")                // SE-0409, Swift 6.0,  SwiftPM 6.0+
+    static let memberImportVisibility: Self = .enableUpcomingFeature("MemberImportVisibility")                    // SE-0444, Swift 6.1,  SwiftPM 6.1+
+    static let inferIsolatedConformances: Self = .enableUpcomingFeature("InferIsolatedConformances")              // SE-0470, Swift 6.2,  SwiftPM 6.2+
+    static let nonisolatedNonsendingByDefault: Self = .enableUpcomingFeature("NonisolatedNonsendingByDefault")    // SE-0461, Swift 6.2,  SwiftPM 6.2+
+    static let immutableWeakCaptures: Self = .enableUpcomingFeature("ImmutableWeakCaptures")                      // SE-0481, Swift 6.2,  SwiftPM 6.2+
+
+    static let allUpcomingFeatures: [Self] = [
+        .existentialAny,
+        .internalImportsByDefault,
+        .memberImportVisibility,
+        .inferIsolatedConformances,
+        .nonisolatedNonsendingByDefault,
+        .immutableWeakCaptures,
+    ]
+}
+
+extension Array where Element == SwiftSetting {
+    static let allUpcomingFeatures: Self = Element.allUpcomingFeatures
 }

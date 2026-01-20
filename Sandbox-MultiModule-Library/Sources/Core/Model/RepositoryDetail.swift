@@ -5,7 +5,7 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Foundation
+public import Foundation
 
 public struct RepositoryDetail: Sendable, Hashable, Identifiable {
     public let id: Int64

@@ -5,10 +5,10 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-import Dependencies
+public import Dependencies
 import DependenciesMacros
-import Model
-import SwiftUI
+public import Model
+public import SwiftUI
 
 @DependencyClient
 public struct RepositoryDetailViewBuilder: Sendable {
