@@ -11,7 +11,8 @@ public import Model
 
 @DependencyClient
 public struct RepositoryDetailUseCase: Sendable {
-    public var execute: @Sendable (_ owner: String, _ repo: String) async throws -> RepositoryDetail
+    // NOTE: https://github.com/pointfreeco/swift-composable-architecture/discussions/3769
+    public var execute: @concurrent @Sendable (_ owner: String, _ repo: String) async throws -> RepositoryDetail
 }
 
 // MARK: - TestDependencyKey

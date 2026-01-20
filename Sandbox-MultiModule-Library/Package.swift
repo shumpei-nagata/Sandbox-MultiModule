@@ -7,7 +7,6 @@ let package = Package(
     name: "Sandbox-MultiModule-Library",
     platforms: [.iOS(.v26)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Sandbox-MultiModule-Library",
             targets: [
@@ -25,8 +24,6 @@ let package = Package(
         .swiftOpenAPIURLSession
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .Core.designSystem,
         .Core.domain,
         .Core.infra,
@@ -192,14 +189,14 @@ extension Target.Feature {
         .target(
             name: "SearchRepository",
             dependencies: [
-                .Core.model,
                 .Core.designSystem,
+                .Core.model,
                 .Descriptor.domain,
                 .Descriptor.feature,
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/SearchRepository",
-            swiftSettings: .allUpcomingFeatures
+            swiftSettings: .forFeatureTarget
         )
     }
 
@@ -207,14 +204,14 @@ extension Target.Feature {
         .target(
             name: "RepositoryDetail",
             dependencies: [
-                .Core.model,
                 .Core.designSystem,
+                .Core.model,
                 .Descriptor.domain,
                 .Descriptor.feature,
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/RepositoryDetail",
-            swiftSettings: .allUpcomingFeatures
+            swiftSettings: .forFeatureTarget
         )
     }
 }
@@ -317,4 +314,7 @@ extension SwiftSetting {
 
 extension Array where Element == SwiftSetting {
     static let allUpcomingFeatures: Self = Element.allUpcomingFeatures
+    static let forFeatureTarget: Self = .allUpcomingFeatures + [
+        .defaultIsolation(MainActor.self)
+    ]
 }

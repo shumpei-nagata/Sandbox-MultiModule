@@ -11,7 +11,8 @@ public import Model
 
 @DependencyClient
 public struct SearchRepositoryUseCase: Sendable {
-    public var execute: @Sendable (_ query: String) async throws -> [SearchResultItem]
+    // NOTE: https://github.com/pointfreeco/swift-composable-architecture/discussions/3769
+    public var execute: @concurrent @Sendable (_ query: String) async throws -> [SearchResultItem]
 }
 
 // MARK: - TestDependencyKey

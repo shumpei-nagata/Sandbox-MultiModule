@@ -196,7 +196,6 @@ struct FlowLayout: Layout {
 }
 
 // MARK: - ViewModel
-@MainActor
 @Observable
 final class RepositoryDetailViewModel {
     let item: SearchResultItem

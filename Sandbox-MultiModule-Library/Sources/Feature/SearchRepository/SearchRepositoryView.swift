@@ -71,7 +71,6 @@ struct SearchRepositoryView: View {
     }
 }
 
-@MainActor
 @Observable
 final class SearchRepositoryViewModel {
     var query: String = ""
