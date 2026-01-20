@@ -6,12 +6,12 @@
 //
 
 import Dependencies
-import FeatureDescriptor
+import FeatureBuilder
 import SwiftUI
 
 @main
 struct Sandbox_MultiModule_iOSApp: App {
-    @Dependency(\.searchRepositoryViewBuilder.build) private var searchRepositoryView
+    @Dependency(\.searchRepositoryFeatureBuilder.build) private var searchRepositoryView
 
     var body: some Scene {
         WindowGroup {

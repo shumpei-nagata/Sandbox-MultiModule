@@ -1,5 +1,5 @@
 //
-//  RepositoryDetailViewBuilder.swift
+//  RepositoryDetailFeatureBuilder.swift
 //  Sandbox-MultiModule-Library
 //
 //  Created by Shumpei Nagata on 2026/01/20.
@@ -7,25 +7,25 @@
 
 public import Dependencies
 import DependenciesMacros
-public import Model
+public import Domain
 public import SwiftUI
 
 @DependencyClient
-public struct RepositoryDetailViewBuilder: Sendable {
+public struct RepositoryDetailFeatureBuilder: Sendable {
     public var build: @Sendable @MainActor (_ item: SearchResultItem) -> AnyView = { _ in
         .init(EmptyView())
     }
 }
 
 // MARK: - TestDependencyKey
-extension RepositoryDetailViewBuilder: TestDependencyKey {
+extension RepositoryDetailFeatureBuilder: TestDependencyKey {
     public static let testValue = Self()
 }
 
 // MARK: - DependencyValues
 extension DependencyValues {
-    public var repositoryDetailViewBuilder: RepositoryDetailViewBuilder {
-        get { self[RepositoryDetailViewBuilder.self] }
-        set { self[RepositoryDetailViewBuilder.self] = newValue }
+    public var repositoryDetailFeatureBuilder: RepositoryDetailFeatureBuilder {
+        get { self[RepositoryDetailFeatureBuilder.self] }
+        set { self[RepositoryDetailFeatureBuilder.self] = newValue }
     }
 }

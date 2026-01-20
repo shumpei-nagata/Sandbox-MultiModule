@@ -6,14 +6,14 @@
 //
 
 public import Dependencies
+import Domain
+public import DrivenPort
 import Foundation
-public import InfraDescriptor
-import Model
 import OpenAPIRuntime
 import OpenAPIURLSession
 
 // MARK: - DependencyKey
-extension SearchRepositoryRepository: DependencyKey {
+extension SearchRepositoryPort: DependencyKey {
     public static let liveValue = Self(
         search: { query in
             let client = Client(

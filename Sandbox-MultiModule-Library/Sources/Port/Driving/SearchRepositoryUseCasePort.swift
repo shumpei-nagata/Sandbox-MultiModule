@@ -1,5 +1,5 @@
 //
-//  SearchRepositoryUseCase.swift
+//  SearchRepositoryUseCasePort.swift
 //  Sandbox-MultiModule-Library
 //
 //  Created by Shumpei Nagata on 2026/01/20.
@@ -7,7 +7,7 @@
 
 public import Dependencies
 import DependenciesMacros
-public import Model
+public import Domain
 
 @DependencyClient
 public struct SearchRepositoryUseCase: Sendable {

@@ -1,19 +1,19 @@
 //
-//  RepositoryDetailRepositoryImpl.swift
+//  GetRepositoryDetailAdapter.swift
 //  Sandbox-MultiModule-Library
 //
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
 public import Dependencies
+import Domain
+public import DrivenPort
 import Foundation
-public import InfraDescriptor
-import Model
 import OpenAPIRuntime
 import OpenAPIURLSession
 
 // MARK: - DependencyKey
-extension RepositoryDetailRepository: DependencyKey {
+extension GetRepositoryDetailPort: DependencyKey {
     public static let liveValue = Self(
         get: { owner, repo in
             let client = Client(

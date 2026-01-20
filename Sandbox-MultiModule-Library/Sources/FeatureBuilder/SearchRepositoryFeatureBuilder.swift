@@ -1,5 +1,5 @@
 //
-//  SearchRepositoryViewBuilder.swift
+//  SearchRepositoryFeatureBuilder.swift
 //  Sandbox-MultiModule-Library
 //
 //  Created by Shumpei Nagata on 2026/01/20.
@@ -10,21 +10,21 @@ import DependenciesMacros
 public import SwiftUI
 
 @DependencyClient
-public struct SearchRepositoryViewBuilder: Sendable {
+public struct SearchRepositoryFeatureBuilder: Sendable {
     public var build: @Sendable @MainActor () -> AnyView = {
         .init(EmptyView())
     }
 }
 
 // MARK: - TestDependencyKey
-extension SearchRepositoryViewBuilder: TestDependencyKey {
+extension SearchRepositoryFeatureBuilder: TestDependencyKey {
     public static let testValue = Self()
 }
 
 // MARK: - DependencyValues
 extension DependencyValues {
-    public var searchRepositoryViewBuilder: SearchRepositoryViewBuilder {
-        get { self[SearchRepositoryViewBuilder.self] }
-        set { self[SearchRepositoryViewBuilder.self] = newValue }
+    public var searchRepositoryFeatureBuilder: SearchRepositoryFeatureBuilder {
+        get { self[SearchRepositoryFeatureBuilder.self] }
+        set { self[SearchRepositoryFeatureBuilder.self] = newValue }
     }
 }

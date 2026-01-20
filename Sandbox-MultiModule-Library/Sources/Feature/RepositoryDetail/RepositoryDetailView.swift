@@ -6,9 +6,9 @@
 //
 
 public import Dependencies
-import DomainDescriptor
-public import FeatureDescriptor
-import Model
+import Domain
+import DrivingPort
+public import FeatureBuilder
 import SwiftUI
 
 struct RepositoryDetailView: View {
@@ -236,7 +236,7 @@ final class RepositoryDetailViewModel {
 }
 
 // MARK: - DependencyKey
-extension RepositoryDetailViewBuilder: DependencyKey {
+extension RepositoryDetailFeatureBuilder: DependencyKey {
     public static let liveValue = Self(
         build: { item in
             .init(RepositoryDetailView(item: item))

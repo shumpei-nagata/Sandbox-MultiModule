@@ -10,10 +10,10 @@ let package = Package(
         .library(
             name: "Sandbox-MultiModule-Library",
             targets: [
-                Target.Core.domain.name,
-                Target.Core.infra.name,
-                Target.Feature.searchRepository.name,
+                Target.application.name,
+                Target.Adapter.driven.name,
                 Target.Feature.repositoryDetail.name,
+                Target.Feature.searchRepository.name
             ]
         ),
     ],
@@ -24,46 +24,60 @@ let package = Package(
         .swiftOpenAPIURLSession
     ],
     targets: [
-        .Core.designSystem,
-        .Core.domain,
-        .Core.infra,
-        .Core.model,
-        .Descriptor.domain,
-        .Descriptor.feature,
-        .Descriptor.infra,
+        .application,
+        .designSystem,
+        .domain,
+        .featureBuilder,
+        .Adapter.driven,
         .Feature.searchRepository,
         .Feature.repositoryDetail,
-        .Tests.Core.domain,
-        .Tests.Core.infra
+        .Port.driving,
+        .Port.driven,
+        .Tests.application,
+        .Tests.Adapter.driven
     ]
 )
 
 extension Target {
-    enum Core {}
-    enum Descriptor {}
+    enum Adapter {}
     enum Feature {}
+    enum Port {}
 
     enum Tests {
-        enum Core {}
+        enum Adapter {}
     }
 }
 
 extension Target.Dependency {
-    enum Core {}
-    enum Descriptor {}
+    enum Adapter {}
     enum ExternalLibrary {}
+    enum Port {}
 }
 
 extension Target.PluginUsage {
     enum ExternalLibrary {}
 }
 
-// MARK: - Core
-extension Target.Core {
+// MARK: - Application
+extension Target {
+    static var application: Target {
+        .target(
+            name: "Application",
+            dependencies: [
+                .domain,
+                .Port.driving,
+                .Port.driven,
+                .ExternalLibrary.dependencies
+            ],
+            path: "Sources/Application",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+
     static var designSystem: Target {
         .target(
             name: "DesignSystem",
-            path: "Sources/Core/DesignSystem",
+            path: "Sources/DesignSystem",
             swiftSettings: .allUpcomingFeatures
         )
     }
@@ -71,115 +85,68 @@ extension Target.Core {
     static var domain: Target {
         .target(
             name: "Domain",
-            dependencies: [
-                .Core.model,
-                .Descriptor.domain,
-                .Descriptor.infra,
-                .ExternalLibrary.dependencies
-            ],
-            path: "Sources/Core/Domain",
+            path: "Sources/Domain",
             swiftSettings: .allUpcomingFeatures
         )
     }
 
-    static var infra: Target {
+    static var featureBuilder: Target {
         .target(
-            name: "Infra",
+            name: "FeatureBuilder",
             dependencies: [
-                .Core.model,
-                .Descriptor.infra,
+                .domain,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
+            path: "Sources/FeatureBuilder",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+}
+
+
+extension Target.Dependency {
+    static var application: Target.Dependency {
+        .target(name: Target.application.name)
+    }
+
+    static var designSystem: Target.Dependency {
+        .target(name: Target.designSystem.name)
+    }
+
+    static var domain: Target.Dependency {
+        .target(name: Target.domain.name)
+    }
+
+    static var featureBuilder: Target.Dependency {
+        .target(name: Target.featureBuilder.name)
+    }
+}
+
+// MARK: - Adapter
+extension Target.Adapter {
+    static var driven: Target {
+        .target(
+            name: "DrivenAdapter",
+            dependencies: [
+                .domain,
+                .Port.driven,
                 .ExternalLibrary.dependencies,
                 .ExternalLibrary.openAPIRuntime,
                 .ExternalLibrary.openAPIURLSession
             ],
-            path: "Sources/Core/Infra",
+            path: "Sources/Adapter/Driven",
             swiftSettings: .allUpcomingFeatures,
             plugins: [
                 .ExternalLibrary.openAPIGenerator
             ]
         )
     }
-
-    static var model: Target {
-        .target(
-            name: "Model",
-            path: "Sources/Core/Model",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
 }
 
-extension Target.Dependency.Core {
-    static var designSystem: Target.Dependency {
-        .target(name: Target.Core.designSystem.name)
-    }
-
-    static var domain: Target.Dependency {
-        .target(name: Target.Core.domain.name)
-    }
-
-    static var infra: Target.Dependency {
-        .target(name: Target.Core.infra.name)
-    }
-
-    static var model: Target.Dependency {
-        .target(name: Target.Core.model.name)
-    }
-}
-
-// MARK: - Descriptor
-extension Target.Descriptor {
-    static var domain: Target {
-        .target(
-            name: "DomainDescriptor",
-            dependencies: [
-                .Core.model,
-                .ExternalLibrary.dependencies,
-                .ExternalLibrary.dependenciesMacros
-            ],
-            path: "Sources/Descriptor/Domain",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-
-    static var feature: Target {
-        .target(
-            name: "FeatureDescriptor",
-            dependencies: [
-                .Core.model,
-                .ExternalLibrary.dependencies,
-                .ExternalLibrary.dependenciesMacros
-            ],
-            path: "Sources/Descriptor/Feature",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-
-    static var infra: Target {
-        .target(
-            name: "InfraDescriptor",
-            dependencies: [
-                .Core.model,
-                .ExternalLibrary.dependencies,
-                .ExternalLibrary.dependenciesMacros
-            ],
-            path: "Sources/Descriptor/Infra",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-}
-
-extension Target.Dependency.Descriptor {
-    static var domain: Target.Dependency {
-        .target(name: Target.Descriptor.domain.name)
-    }
-
-    static var feature: Target.Dependency {
-        .target(name: Target.Descriptor.feature.name)
-    }
-
-    static var infra: Target.Dependency {
-        .target(name: Target.Descriptor.infra.name)
+extension Target.Dependency.Adapter {
+    static var driven: Target.Dependency {
+        .target(name: Target.Adapter.driven.name)
     }
 }
 
@@ -187,12 +154,12 @@ extension Target.Dependency.Descriptor {
 extension Target.Feature {
     static var searchRepository: Target {
         .target(
-            name: "SearchRepository",
+            name: "SearchRepositoryFeature",
             dependencies: [
-                .Core.designSystem,
-                .Core.model,
-                .Descriptor.domain,
-                .Descriptor.feature,
+                .designSystem,
+                .domain,
+                .featureBuilder,
+                .Port.driving,
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/SearchRepository",
@@ -202,12 +169,12 @@ extension Target.Feature {
 
     static var repositoryDetail: Target {
         .target(
-            name: "RepositoryDetail",
+            name: "RepositoryDetailFeature",
             dependencies: [
-                .Core.designSystem,
-                .Core.model,
-                .Descriptor.domain,
-                .Descriptor.feature,
+                .designSystem,
+                .domain,
+                .featureBuilder,
+                .Port.driving,
                 .ExternalLibrary.dependencies
             ],
             path: "Sources/Feature/RepositoryDetail",
@@ -216,22 +183,63 @@ extension Target.Feature {
     }
 }
 
-// MARK: - Tests
-extension Target.Tests.Core {
-    static var domain: Target {
-        .testTarget(
-            name: "DomainTests",
-            dependencies: [.Core.domain],
-            path: "Tests/Core/Domain",
+// MARK: - Port
+extension Target.Port {
+    static var driving: Target {
+        .target(
+            name: "DrivingPort",
+            dependencies: [
+                .domain,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
+            path: "Sources/Port/Driving",
             swiftSettings: .allUpcomingFeatures
         )
     }
 
-    static var infra: Target {
+    static var driven: Target {
+        .target(
+            name: "DrivenPort",
+            dependencies: [
+                .domain,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
+            path: "Sources/Port/Driven",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+}
+
+extension Target.Dependency.Port {
+    static var driving: Target.Dependency {
+        .target(name: Target.Port.driving.name)
+    }
+
+    static var driven: Target.Dependency {
+        .target(name: Target.Port.driven.name)
+    }
+}
+
+// MARK: - Tests
+extension Target.Tests {
+    static var application: Target {
         .testTarget(
-            name: "InfraTests",
-            dependencies: [.Core.infra],
-            path: "Tests/Core/Infra",
+            name: "ApplicationTests",
+            dependencies: [.application],
+            path: "Tests/Application",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+}
+
+extension Target.Tests.Adapter {
+    static var driven: Target {
+        .testTarget(
+            name: "DrivenAdapterTests",
+            dependencies: [.Adapter.driven],
+            path: "Tests/Adapter/Driven",
             swiftSettings: .allUpcomingFeatures
         )
     }

@@ -6,14 +6,14 @@
 //
 
 public import Dependencies
-import DomainDescriptor
-public import FeatureDescriptor
-import Model
+import Domain
+import DrivingPort
+public import FeatureBuilder
 import SwiftUI
 
 struct SearchRepositoryView: View {
     @State private var viewModel = SearchRepositoryViewModel()
-    @Dependency(\.repositoryDetailViewBuilder.build) private var repositoryDetailView
+    @Dependency(\.repositoryDetailFeatureBuilder.build) private var repositoryDetailView
 
     var body: some View {
         NavigationStack {
@@ -96,7 +96,7 @@ final class SearchRepositoryViewModel {
 }
 
 // MARK: - DependencyKey
-extension SearchRepositoryViewBuilder: DependencyKey {
+extension SearchRepositoryFeatureBuilder: DependencyKey {
     public static let liveValue = Self(
         build: {
             .init(SearchRepositoryView())
