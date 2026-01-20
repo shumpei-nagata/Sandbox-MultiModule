@@ -10,7 +10,10 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Sandbox-MultiModule-Library",
-            targets: ["Sandbox-MultiModule-Library"]
+            targets: [
+                Target.Core.model.name,
+                Target.Descriptor.feature.name
+            ]
         ),
     ],
     dependencies: [
@@ -19,113 +22,157 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "Sandbox-MultiModule-Library"
-        ),
-        .testTarget(
-            name: "Sandbox-MultiModule-LibraryTests",
-            dependencies: ["Sandbox-MultiModule-Library"]
-        ),
+        .Core.designSystem,
+        .Core.domain,
+        .Core.infra,
+        .Core.model,
+        .Descriptor.domain,
+        .Descriptor.feature,
+        .Descriptor.infra,
+        .Feature.searchRepository,
+        .Feature.repositoryDetail
     ]
 )
 
 extension Target {
-    static var model: Target {
-        .target(name: "Model")
+    enum Core {}
+    enum Descriptor {}
+    enum Feature {}
+}
+
+extension Target.Dependency {
+    enum Core {}
+    enum Descriptor {}
+    enum ExternalLibrary {}
+}
+
+// MARK: - Core
+extension Target.Core {
+    static var designSystem: Target {
+        .target(
+            name: "DesignSystem",
+            path: "Sources/Core/DesignSystem"
+        )
     }
-    
+
     static var domain: Target {
         .target(
             name: "Domain",
             dependencies: [
-                .model,
-                .repositoryInterface,
-                .ExternalLibraries.swiftDependencies
-            ]
+                .Core.model,
+                .Descriptor.domain,
+                .Descriptor.infra,
+                .ExternalLibrary.swiftDependencies
+            ],
+            path: "Sources/Core/Domain"
         )
     }
-    
-    static var repositoryInterface: Target {
-        .target(
-            name: "RepositoryInterface",
-            dependencies: [.model]
-        )
-    }
-    
+
     static var infra: Target{
         .target(
             name: "Infra",
             dependencies: [
-                .model,
-                .repositoryInterface,
-                .ExternalLibraries.swiftDependencies
-            ]
+                .Core.model,
+                .Descriptor.infra,
+                .ExternalLibrary.swiftDependencies
+            ],
+            path: "Sources/Core/Infra"
         )
     }
-    
-    static var designSystem: Target {
-        .target(name: "DesignSystem")
+
+    static var model: Target {
+        .target(
+            name: "Model",
+            path: "Sources/Core/Model"
+        )
     }
 }
 
-extension Target.Dependency {
-    static var model: Self {
-        .target(name: Target.model.name)
+extension Target.Dependency.Core {
+    static var designSystem: Target.Dependency {
+        .target(name: Target.Core.designSystem.name)
     }
-    
-    static var domain: Self {
-        .target(name: Target.domain.name)
+
+    static var domain: Target.Dependency {
+        .target(name: Target.Core.domain.name)
     }
-    
-    static var designSystem: Self {
-        .target(name: Target.designSystem.name)
-    }
-    
-    static var repositoryInterface: Self {
-        .target(name: Target.repositoryInterface.name)
+
+    static var model: Target.Dependency {
+        .target(name: Target.Core.model.name)
     }
 }
 
-// MARK: - Features
-extension Target {
-    static var featureDescriptor: Target {
-        .target(name: "FeatureDescriptor", dependencies: [.model])
+// MARK: - Descriptor
+extension Target.Descriptor {
+    static var domain: Target {
+        .target(
+            name: "DomainDescriptor",
+            dependencies: [.Core.model],
+            path: "Sources/Descriptor/Domain"
+        )
     }
-    
-    enum Features {
-        static var search: Target {
-            .target(
-                name: "SearchRepository",
-                dependencies: [
-                    .domain,
-                    .designSystem,
-                    .model,
-                    .featureDescriptor
-                ]
-            )
-        }
-        
-        static var repositoryDetail: Target {
-            .target(
-                name: "RepositoryDetail",
-                dependencies: [
-                    .domain,
-                    .designSystem,
-                    .model,
-                    .featureDescriptor
-                ]
-            )
-        }
+
+    static var feature: Target {
+        .target(
+            name: "FeatureDescriptor",
+            dependencies: [.Core.model],
+            path: "Sources/Descriptor/Feature"
+        )
+    }
+
+    static var infra: Target {
+        .target(
+            name: "InfraDescriptor",
+            dependencies: [.Core.model],
+            path: "Sources/Descriptor/Infra"
+        )
     }
 }
 
-extension Target.Dependency {
-    static var featureDescriptor: Self {
-        .target(name: Target.featureDescriptor.name)
+extension Target.Dependency.Descriptor {
+    static var domain: Target.Dependency {
+        .target(name: Target.Descriptor.domain.name)
+    }
+
+    static var feature: Target.Dependency {
+        .target(name: Target.Descriptor.feature.name)
+    }
+
+    static var infra: Target.Dependency {
+        .target(name: Target.Descriptor.infra.name)
     }
 }
 
-// MARK: - External Libraries
+// MARK: - Feature
+extension Target.Feature {
+    static var searchRepository: Target {
+        .target(
+            name: "SearchRepository",
+            dependencies: [
+                .Core.model,
+                .Core.designSystem,
+                .Descriptor.domain,
+                .Descriptor.feature
+            ],
+            path: "Sources/Feature/SearchRepository"
+        )
+    }
+
+    static var repositoryDetail: Target {
+        .target(
+            name: "RepositoryDetail",
+            dependencies: [
+                .Core.model,
+                .Core.designSystem,
+                .Descriptor.domain,
+                .Descriptor.feature
+            ],
+            path: "Sources/Feature/RepositoryDetail"
+        )
+    }
+}
+
+// MARK: - External Library
 extension Package.Dependency {
     static var swiftDependencies: Package.Dependency {
         .package(
@@ -135,10 +182,8 @@ extension Package.Dependency {
     }
 }
 
-extension Target.Dependency {
-    enum ExternalLibraries {
-        static var swiftDependencies: Target.Dependency {
-            .product(name: "Dependencies", package: "swift-dependencies")
-        }
+extension Target.Dependency.ExternalLibrary {
+    static var swiftDependencies: Target.Dependency {
+        .product(name: "Dependencies", package: "swift-dependencies")
     }
 }
