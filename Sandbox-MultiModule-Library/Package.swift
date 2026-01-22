@@ -11,15 +11,13 @@ let package = Package(
             name: "Sandbox-MultiModule-Library",
             targets: [
                 Target.useCase.name,
-                Target.Adapter.Out.getRepositoryDetail.name,
-                Target.Adapter.Out.searchRepository.name,
+                Target.Adapter.out.name,
                 Target.Feature.repositoryDetail.name,
                 Target.Feature.searchRepository.name
             ]
         ),
         .forDev(.useCase),
-        .forDev(.Adapter.Out.getRepositoryDetail),
-        .forDev(.Adapter.Out.searchRepository),
+        .forDev(.Adapter.out),
         .forDev(.Feature.repositoryDetail),
         .forDev(.Feature.searchRepository)
     ],
@@ -33,24 +31,18 @@ let package = Package(
 )
 
 extension Target {
-    enum Adapter {
-        enum Out {}
-    }
+    enum Adapter {}
     enum Feature {}
     enum Infra {}
     enum Port {}
 
     enum Tests {
-        enum Adapter {
-            enum Out {}
-        }
+        enum Adapter {}
     }
 }
 
 extension Target.Dependency {
-    enum Adapter {
-        enum Out {}
-    }
+    enum Adapter {}
     enum ExternalLibrary {}
     enum Infra {}
     enum Port {}
@@ -152,50 +144,29 @@ extension Target.Dependency {
 // MARK: - Adapter
 extension Array where Element == Target {
     static var adapters: Self {
-        [
-            .Adapter.Out.getRepositoryDetail,
-            .Adapter.Out.searchRepository
-        ]
+        [.Adapter.out]
     }
 }
 
-extension Target.Adapter.Out {
-    static var getRepositoryDetail: Target {
+extension Target.Adapter {
+    static var out: Target {
         .target(
-            name: "GetRepositoryDetailAdapter",
+            name: "OutAdapter",
             dependencies: [
                 .domain,
                 .ExternalLibrary.dependencies,
                 .Infra.gitHubAPI,
                 .Port.out
             ],
-            path: "Sources/Adapter/Out/GetRepositoryDetail",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-
-    static var searchRepository: Target {
-        .target(
-            name: "SearchRepositoryAdapter",
-            dependencies: [
-                .domain,
-                .ExternalLibrary.dependencies,
-                .Infra.gitHubAPI,
-                .Port.out
-            ],
-            path: "Sources/Adapter/Out/SearchRepository",
+            path: "Sources/Adapter/Out",
             swiftSettings: .allUpcomingFeatures
         )
     }
 }
 
-extension Target.Dependency.Adapter.Out {
-    static var getRepositoryDetail: Target.Dependency {
-        .target(name: Target.Adapter.Out.getRepositoryDetail.name)
-    }
-
-    static var searchRepository: Target.Dependency {
-        .target(name: Target.Adapter.Out.searchRepository.name)
+extension Target.Dependency.Adapter {
+    static var out: Target.Dependency {
+        .target(name: Target.Adapter.out.name)
     }
 }
 
@@ -327,8 +298,7 @@ extension Array where Element == Target {
     static var tests: [Target] {
         [
             .Tests.useCase,
-            .Tests.Adapter.Out.getRepositoryDetail,
-            .Tests.Adapter.Out.searchRepository
+            .Tests.Adapter.out
         ]
     }
 }
@@ -344,21 +314,12 @@ extension Target.Tests {
     }
 }
 
-extension Target.Tests.Adapter.Out {
-    static var getRepositoryDetail: Target {
+extension Target.Tests.Adapter {
+    static var out: Target {
         .testTarget(
-            name: "GetRepositoryDetailAdapterTests",
-            dependencies: [.Adapter.Out.getRepositoryDetail],
-            path: "Tests/Adapter/Out/GetRepositoryDetail",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-
-    static var searchRepository: Target {
-        .testTarget(
-            name: "SearchRepositoryAdapterTests",
-            dependencies: [.Adapter.Out.searchRepository],
-            path: "Tests/Adapter/Out/SearchRepository",
+            name: "OutAdapterTests",
+            dependencies: [.Adapter.out],
+            path: "Tests/Adapter/Out",
             swiftSettings: .allUpcomingFeatures
         )
     }

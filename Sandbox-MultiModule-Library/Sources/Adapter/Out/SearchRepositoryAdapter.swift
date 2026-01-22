@@ -7,9 +7,9 @@
 
 import Dependencies
 import Domain
-package import OutPort
 import Foundation
 import GitHubAPI
+package import OutPort
 
 // MARK: - DependencyKey
 extension SearchRepositoryPort: DependencyKey {
