@@ -10,16 +10,16 @@ let package = Package(
         .library(
             name: "Sandbox-MultiModule-Library",
             targets: [
-                Target.application.name,
-                Target.Adapter.Driven.getRepositoryDetail.name,
-                Target.Adapter.Driven.searchRepository.name,
+                Target.useCase.name,
+                Target.Adapter.Out.getRepositoryDetail.name,
+                Target.Adapter.Out.searchRepository.name,
                 Target.Feature.repositoryDetail.name,
                 Target.Feature.searchRepository.name
             ]
         ),
-        .forDev(.application),
-        .forDev(.Adapter.Driven.getRepositoryDetail),
-        .forDev(.Adapter.Driven.searchRepository),
+        .forDev(.useCase),
+        .forDev(.Adapter.Out.getRepositoryDetail),
+        .forDev(.Adapter.Out.searchRepository),
         .forDev(.Feature.repositoryDetail),
         .forDev(.Feature.searchRepository)
     ],
@@ -34,7 +34,7 @@ let package = Package(
 
 extension Target {
     enum Adapter {
-        enum Driven {}
+        enum Out {}
     }
     enum Feature {}
     enum Infra {}
@@ -42,14 +42,14 @@ extension Target {
 
     enum Tests {
         enum Adapter {
-            enum Driven {}
+            enum Out {}
         }
     }
 }
 
 extension Target.Dependency {
     enum Adapter {
-        enum Driven {}
+        enum Out {}
     }
     enum ExternalLibrary {}
     enum Infra {}
@@ -63,10 +63,10 @@ extension Target.PluginUsage {
 extension Array where Element == Target {
     static var allTargets: Self {
         [
-            .application,
             .designSystem,
             .domain,
-            .featureBuilder
+            .featureBuilder,
+            .useCase
         ]
         + Self.adapters
         + Self.features
@@ -85,22 +85,8 @@ extension Product {
     }
 }
 
-// MARK: - Application
+// MARK: - Targets
 extension Target {
-    static var application: Target {
-        .target(
-            name: "Application",
-            dependencies: [
-                .domain,
-                .ExternalLibrary.dependencies,
-                .Port.driving,
-                .Port.driven
-            ],
-            path: "Sources/Application",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
-
     static var designSystem: Target {
         .target(
             name: "DesignSystem",
@@ -129,13 +115,23 @@ extension Target {
             swiftSettings: .allUpcomingFeatures
         )
     }
+
+    static var useCase: Target {
+        .target(
+            name: "UseCase",
+            dependencies: [
+                .domain,
+                .ExternalLibrary.dependencies,
+                .Port.in,
+                .Port.out
+            ],
+            path: "Sources/UseCase",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
 }
 
 extension Target.Dependency {
-    static var application: Target.Dependency {
-        .target(name: Target.application.name)
-    }
-
     static var designSystem: Target.Dependency {
         .target(name: Target.designSystem.name)
     }
@@ -147,19 +143,23 @@ extension Target.Dependency {
     static var featureBuilder: Target.Dependency {
         .target(name: Target.featureBuilder.name)
     }
+
+    static var useCase: Target.Dependency {
+        .target(name: Target.useCase.name)
+    }
 }
 
 // MARK: - Adapter
 extension Array where Element == Target {
     static var adapters: Self {
         [
-            .Adapter.Driven.getRepositoryDetail,
-            .Adapter.Driven.searchRepository
+            .Adapter.Out.getRepositoryDetail,
+            .Adapter.Out.searchRepository
         ]
     }
 }
 
-extension Target.Adapter.Driven {
+extension Target.Adapter.Out {
     static var getRepositoryDetail: Target {
         .target(
             name: "GetRepositoryDetailAdapter",
@@ -167,9 +167,9 @@ extension Target.Adapter.Driven {
                 .domain,
                 .ExternalLibrary.dependencies,
                 .Infra.gitHubAPI,
-                .Port.driven
+                .Port.out
             ],
-            path: "Sources/Adapter/Driven/GetRepositoryDetail",
+            path: "Sources/Adapter/Out/GetRepositoryDetail",
             swiftSettings: .allUpcomingFeatures
         )
     }
@@ -181,21 +181,21 @@ extension Target.Adapter.Driven {
                 .domain,
                 .ExternalLibrary.dependencies,
                 .Infra.gitHubAPI,
-                .Port.driven
+                .Port.out
             ],
-            path: "Sources/Adapter/Driven/SearchRepository",
+            path: "Sources/Adapter/Out/SearchRepository",
             swiftSettings: .allUpcomingFeatures
         )
     }
 }
 
-extension Target.Dependency.Adapter.Driven {
+extension Target.Dependency.Adapter.Out {
     static var getRepositoryDetail: Target.Dependency {
-        .target(name: Target.Adapter.Driven.getRepositoryDetail.name)
+        .target(name: Target.Adapter.Out.getRepositoryDetail.name)
     }
 
     static var searchRepository: Target.Dependency {
-        .target(name: Target.Adapter.Driven.searchRepository.name)
+        .target(name: Target.Adapter.Out.searchRepository.name)
     }
 }
 
@@ -218,7 +218,7 @@ extension Target.Feature {
                 .domain,
                 .featureBuilder,
                 .ExternalLibrary.dependencies,
-                .Port.driving
+                .Port.in
             ],
             path: "Sources/Feature/RepositoryDetail",
             swiftSettings: .forFeatureTarget
@@ -233,7 +233,7 @@ extension Target.Feature {
                 .domain,
                 .featureBuilder,
                 .ExternalLibrary.dependencies,
-                .Port.driving
+                .Port.in
             ],
             path: "Sources/Feature/SearchRepository",
             swiftSettings: .forFeatureTarget
@@ -277,35 +277,35 @@ extension Target.Dependency.Infra {
 extension Array where Element == Target {
     static var ports: Self {
         [
-            .Port.driven,
-            .Port.driving
+            .Port.in,
+            .Port.out
         ]
     }
 }
 
 extension Target.Port {
-    static var driven: Target {
+    static var `in`: Target {
         .target(
-            name: "DrivenPort",
+            name: "InPort",
             dependencies: [
                 .domain,
                 .ExternalLibrary.dependencies,
                 .ExternalLibrary.dependenciesMacros
             ],
-            path: "Sources/Port/Driven",
+            path: "Sources/Port/In",
             swiftSettings: .allUpcomingFeatures
         )
     }
 
-    static var driving: Target {
+    static var out: Target {
         .target(
-            name: "DrivingPort",
+            name: "OutPort",
             dependencies: [
                 .domain,
                 .ExternalLibrary.dependencies,
                 .ExternalLibrary.dependenciesMacros
             ],
-            path: "Sources/Port/Driving",
+            path: "Sources/Port/Out",
             swiftSettings: .allUpcomingFeatures
         )
     }
@@ -313,12 +313,12 @@ extension Target.Port {
 }
 
 extension Target.Dependency.Port {
-    static var driven: Target.Dependency {
-        .target(name: Target.Port.driven.name)
+    static var `in`: Target.Dependency {
+        .target(name: Target.Port.in.name)
     }
 
-    static var driving: Target.Dependency {
-        .target(name: Target.Port.driving.name)
+    static var out: Target.Dependency {
+        .target(name: Target.Port.out.name)
     }
 }
 
@@ -326,30 +326,30 @@ extension Target.Dependency.Port {
 extension Array where Element == Target {
     static var tests: [Target] {
         [
-            .Tests.application,
-            .Tests.Adapter.Driven.getRepositoryDetail,
-            .Tests.Adapter.Driven.searchRepository
+            .Tests.useCase,
+            .Tests.Adapter.Out.getRepositoryDetail,
+            .Tests.Adapter.Out.searchRepository
         ]
     }
 }
 
 extension Target.Tests {
-    static var application: Target {
+    static var useCase: Target {
         .testTarget(
-            name: "ApplicationTests",
-            dependencies: [.application],
-            path: "Tests/Application",
+            name: "UseCaseTests",
+            dependencies: [.useCase],
+            path: "Tests/UseCase",
             swiftSettings: .allUpcomingFeatures
         )
     }
 }
 
-extension Target.Tests.Adapter.Driven {
+extension Target.Tests.Adapter.Out {
     static var getRepositoryDetail: Target {
         .testTarget(
             name: "GetRepositoryDetailAdapterTests",
-            dependencies: [.Adapter.Driven.getRepositoryDetail],
-            path: "Tests/Adapter/Driven/GetRepositoryDetail",
+            dependencies: [.Adapter.Out.getRepositoryDetail],
+            path: "Tests/Adapter/Out/GetRepositoryDetail",
             swiftSettings: .allUpcomingFeatures
         )
     }
@@ -357,8 +357,8 @@ extension Target.Tests.Adapter.Driven {
     static var searchRepository: Target {
         .testTarget(
             name: "SearchRepositoryAdapterTests",
-            dependencies: [.Adapter.Driven.searchRepository],
-            path: "Tests/Adapter/Driven/SearchRepository",
+            dependencies: [.Adapter.Out.searchRepository],
+            path: "Tests/Adapter/Out/SearchRepository",
             swiftSettings: .allUpcomingFeatures
         )
     }

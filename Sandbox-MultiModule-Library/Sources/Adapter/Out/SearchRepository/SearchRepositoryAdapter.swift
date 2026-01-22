@@ -7,7 +7,7 @@
 
 import Dependencies
 import Domain
-package import DrivenPort
+package import OutPort
 import Foundation
 import GitHubAPI
 

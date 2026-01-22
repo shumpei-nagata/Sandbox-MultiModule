@@ -6,8 +6,8 @@
 //
 
 import Dependencies
-package import DrivingPort
-import DrivenPort
+package import InPort
+import OutPort
 
 // MARK: - DependencyKey
 extension RepositoryDetailUseCase: DependencyKey {
