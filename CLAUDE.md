@@ -21,25 +21,25 @@ Hexagonal Architectureをベースにしています。
   - アプリ全体で使用するデータモデルを定義する
   - 例: `SearchResultItem`, `RepositoryDetail`
 
-### Application
+### UseCase
 
 アプリケーションロジック（UseCase）の実装を定義する層。
 
-- **Application**（Sources/Application）
+- **UseCase**（Sources/UseCase）
   - UseCaseの実装を定義する
-  - DrivingPortで定義されたUseCaseインタフェースに対する`DependencyKey.liveValue`を提供
-  - DrivenPortのPortインタフェースを利用してデータを取得
+  - InPortで定義されたUseCaseインタフェースに対する`DependencyKey.liveValue`を提供
+  - OutPortのPortインタフェースを利用してデータを取得
 
 ### Port
 
 各層のインタフェース（protocol相当）を定義する層。swift-dependenciesの`@DependencyClient`を使用。
 
-- **DrivingPort**（Sources/Port/Driving）
-  - FeatureやApplicationから参照されるUseCaseのインタフェースを定義する
+- **InPort**（Sources/Port/In）
+  - FeatureやUseCaseから参照されるUseCaseのインタフェースを定義する
   - `TestDependencyKey.testValue`とDependencyValuesへの登録を含む
   - 例: `SearchRepositoryUseCase`, `RepositoryDetailUseCase`
-- **DrivenPort**（Sources/Port/Driven）
-  - ApplicationやAdapterから参照されるPortのインタフェースを定義する
+- **OutPort**（Sources/Port/Out）
+  - UseCaseやAdapterから参照されるPortのインタフェースを定義する
   - `TestDependencyKey.testValue`とDependencyValuesへの登録を含む
   - 例: `SearchRepositoryPort`, `GetRepositoryDetailPort`
 
@@ -47,10 +47,17 @@ Hexagonal Architectureをベースにしています。
 
 外部システムとの接続を担うアダプター層。
 
-- **DrivenAdapter**（Sources/Adapter/Driven）
+- **OutAdapter**（Sources/Adapter/Out）
   - 外部API等のデータを取得するPortの実装を定義する
-  - DrivenPortで定義されたPortインタフェースに対する`DependencyKey.liveValue`を提供
-  - OpenAPI Generatorで自動生成されたAPIクライアントを使用
+  - OutPortで定義されたPortインタフェースに対する`DependencyKey.liveValue`を提供
+  - Infraで定義されたAPIクライアントを使用
+
+### Infra
+
+外部システムとの通信を担うインフラ層。
+
+- **GitHubAPI**（Sources/Infra/GitHubAPI）
+  - OpenAPI Generatorで自動生成されたGitHub APIクライアント
 
 ### DesignSystem
 
@@ -84,38 +91,46 @@ Feature間の依存関係を解決するためのインタフェースを定義�
 
 各モジュールのユニットテストを定義する層。
 
-- **ApplicationTests**（Tests/Application）
-  - Application層のUseCaseに対するテスト
-- **DrivenAdapterTests**（Tests/Adapter/Driven）
-  - Adapter層のRepositoryに対するテスト
+- **UseCaseTests**（Tests/UseCase）
+  - UseCase層に対するテスト
+- **OutAdapterTests**（Tests/Adapter/Out）
+  - Adapter層に対するテスト
 
 ```mermaid
-graph TD
+graph LR
   subgraph Port
-    DrivenPort
-    DrivingPort
+    InPort
+    OutPort
   end
   subgraph Feature
     RepositoryDetailFeature
     SearchRepositoryFeature
   end
+  subgraph Infra
+    GitHubAPI
+  end
+  subgraph Tests
+    OutAdapterTests
+    UseCaseTests
+  end
 
-  Application --> Domain
-  Application --> DrivenPort
-  Application --> DrivingPort
-  ApplicationTests --> Application
-  DrivenAdapter --> Domain
-  DrivenAdapter --> DrivenPort
-  DrivenAdapterTests --> DrivenAdapter
-  DrivenPort --> Domain
-  DrivingPort --> Domain
   FeatureBuilder --> Domain
+  InPort --> Domain
+  OutAdapter --> Domain
+  OutAdapter --> GitHubAPI
+  OutAdapter --> OutPort
+  OutAdapterTests --> OutAdapter
+  OutPort --> Domain
   RepositoryDetailFeature --> DesignSystem
   RepositoryDetailFeature --> Domain
-  RepositoryDetailFeature --> DrivingPort
   RepositoryDetailFeature --> FeatureBuilder
+  RepositoryDetailFeature --> InPort
   SearchRepositoryFeature --> DesignSystem
   SearchRepositoryFeature --> Domain
-  SearchRepositoryFeature --> DrivingPort
   SearchRepositoryFeature --> FeatureBuilder
+  SearchRepositoryFeature --> InPort
+  UseCase --> Domain
+  UseCase --> InPort
+  UseCase --> OutPort
+  UseCaseTests --> UseCase
 ```
