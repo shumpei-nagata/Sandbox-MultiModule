@@ -54,7 +54,7 @@ struct SearchRepositoryView: View {
             }
             .navigationTitle("Search Repositories")
             .navigationDestination(for: SearchResultItem.self) {
-                AnyView(repositoryDetailView($0))
+                repositoryDetailView($0)
             }
             .searchable(text: $viewModel.query, prompt: "Search repositories")
             .onSubmit(of: .search) {
