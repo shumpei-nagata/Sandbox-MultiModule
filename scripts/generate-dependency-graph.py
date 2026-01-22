@@ -34,11 +34,15 @@ def get_package_json(package_dir: Path) -> dict:
 
 
 def get_category_from_path(path: str) -> str | None:
-    """pathからカテゴリを判定（Feature, Portのみグループ化）"""
+    """pathからカテゴリを判定（Feature, Port, Infra, Testsをグループ化）"""
     if path.startswith("Sources/Feature/"):
         return "Feature"
     elif path.startswith("Sources/Port/"):
         return "Port"
+    elif path.startswith("Sources/Infra/"):
+        return "Infra"
+    elif path.startswith("Tests/"):
+        return "Tests"
     else:
         return None
 
@@ -83,10 +87,10 @@ def generate_mermaid(package: dict) -> str:
             edges.append((name, dep))
 
     # Mermaid出力を構築
-    lines = ["graph TD"]
+    lines = ["graph LR"]
 
     # カテゴリの出力順序
-    category_order = ["Port", "Feature"]
+    category_order = ["Port", "Feature", "Infra", "Tests"]
 
     for category in category_order:
         if categories[category]:
