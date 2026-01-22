@@ -9,18 +9,14 @@ public import Dependencies
 import Domain
 public import DrivenPort
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import GitHubAPI
 
 // MARK: - DependencyKey
 extension SearchRepositoryPort: DependencyKey {
     public static let liveValue = Self(
         search: { query in
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let response = try await client.searchRepos(query: .init(q: query))
+            @Dependency(\.gitHubAPI) var gitHubAPI
+            let response = try await gitHubAPI.searchRepos(query: .init(q: query))
                 .ok
                 .body
                 .json

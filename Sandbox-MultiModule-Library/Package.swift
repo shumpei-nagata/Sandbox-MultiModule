@@ -31,6 +31,7 @@ let package = Package(
         .Adapter.driven,
         .Feature.searchRepository,
         .Feature.repositoryDetail,
+        .Infra.gitHubAPI,
         .Port.driving,
         .Port.driven,
         .Tests.application,
@@ -41,6 +42,7 @@ let package = Package(
 extension Target {
     enum Adapter {}
     enum Feature {}
+    enum Infra {}
     enum Port {}
 
     enum Tests {
@@ -51,6 +53,7 @@ extension Target {
 extension Target.Dependency {
     enum Adapter {}
     enum ExternalLibrary {}
+    enum Infra {}
     enum Port {}
 }
 
@@ -65,9 +68,9 @@ extension Target {
             name: "Application",
             dependencies: [
                 .domain,
+                .ExternalLibrary.dependencies,
                 .Port.driving,
-                .Port.driven,
-                .ExternalLibrary.dependencies
+                .Port.driven
             ],
             path: "Sources/Application",
             swiftSettings: .allUpcomingFeatures
@@ -130,16 +133,12 @@ extension Target.Adapter {
             name: "DrivenAdapter",
             dependencies: [
                 .domain,
-                .Port.driven,
+                .Infra.gitHubAPI,
                 .ExternalLibrary.dependencies,
-                .ExternalLibrary.openAPIRuntime,
-                .ExternalLibrary.openAPIURLSession
+                .Port.driven
             ],
             path: "Sources/Adapter/Driven",
-            swiftSettings: .allUpcomingFeatures,
-            plugins: [
-                .ExternalLibrary.openAPIGenerator
-            ]
+            swiftSettings: .allUpcomingFeatures
         )
     }
 }
@@ -159,8 +158,8 @@ extension Target.Feature {
                 .designSystem,
                 .domain,
                 .featureBuilder,
-                .Port.driving,
-                .ExternalLibrary.dependencies
+                .ExternalLibrary.dependencies,
+                .Port.driving
             ],
             path: "Sources/Feature/SearchRepository",
             swiftSettings: .forFeatureTarget
@@ -174,12 +173,38 @@ extension Target.Feature {
                 .designSystem,
                 .domain,
                 .featureBuilder,
-                .Port.driving,
-                .ExternalLibrary.dependencies
+                .ExternalLibrary.dependencies,
+                .Port.driving
             ],
             path: "Sources/Feature/RepositoryDetail",
             swiftSettings: .forFeatureTarget
         )
+    }
+}
+
+// MARK: - Infra
+extension Target.Infra {
+    // 自動生成されるコードがUpcoming Featureに未対応のため、swiftSettingsを指定しない
+    // https://github.com/apple/swift-openapi-generator/issues/777
+    static var gitHubAPI: Target {
+        .target(
+            name: "GitHubAPI",
+            dependencies: [
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.openAPIRuntime,
+                .ExternalLibrary.openAPIURLSession
+            ],
+            path: "Sources/Infra/GitHubAPI",
+            plugins: [
+                .ExternalLibrary.openAPIGenerator
+            ]
+        )
+    }
+}
+
+extension Target.Dependency.Infra {
+    static var gitHubAPI: Target.Dependency {
+        .target(name: Target.Infra.gitHubAPI.name)
     }
 }
 

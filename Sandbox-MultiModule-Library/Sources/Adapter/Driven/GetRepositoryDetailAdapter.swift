@@ -9,18 +9,14 @@ public import Dependencies
 import Domain
 public import DrivenPort
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import GitHubAPI
 
 // MARK: - DependencyKey
 extension GetRepositoryDetailPort: DependencyKey {
     public static let liveValue = Self(
         get: { owner, repo in
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let response = try await client
+            @Dependency(\.gitHubAPI) var gitHubAPI
+            let response = try await gitHubAPI
                 .reposGet(path: .init(owner: owner, repo: repo))
                 .ok
                 .body

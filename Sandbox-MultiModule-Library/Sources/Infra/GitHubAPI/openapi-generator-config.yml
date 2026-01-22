@@ -1,7 +1,7 @@
 generate:
   - types
   - client
-accessModifier: internal
+accessModifier: package
 additionalFileComments:
   - "swift-format-ignore-file"
   - "swiftlint:disable all"
