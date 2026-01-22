@@ -16,6 +16,10 @@ let package = Package(
                 Target.Feature.searchRepository.name
             ]
         ),
+        .forDev(.application),
+        .forDev(.Adapter.driven),
+        .forDev(.Feature.repositoryDetail),
+        .forDev(.Feature.searchRepository)
     ],
     dependencies: [
         .swiftDependencies,
@@ -23,20 +27,7 @@ let package = Package(
         .swiftOpenAPIRuntime,
         .swiftOpenAPIURLSession
     ],
-    targets: [
-        .application,
-        .designSystem,
-        .domain,
-        .featureBuilder,
-        .Adapter.driven,
-        .Feature.searchRepository,
-        .Feature.repositoryDetail,
-        .Infra.gitHubAPI,
-        .Port.driving,
-        .Port.driven,
-        .Tests.application,
-        .Tests.Adapter.driven
-    ]
+    targets: .allTargets
 )
 
 extension Target {
@@ -59,6 +50,31 @@ extension Target.Dependency {
 
 extension Target.PluginUsage {
     enum ExternalLibrary {}
+}
+
+extension Array where Element == Target {
+    static var allTargets: Self {
+        [
+            .application,
+            .designSystem,
+            .domain,
+            .featureBuilder
+        ]
+        + Self.adapters
+        + Self.features
+        + Self.infras
+        + Self.ports
+        + Self.tests
+    }
+}
+
+extension Product {
+    static func forDev(_ target: Target) -> Product {
+        .library(
+            name: target.name,
+            targets: [target.name]
+        )
+    }
 }
 
 // MARK: - Application
@@ -107,7 +123,6 @@ extension Target {
     }
 }
 
-
 extension Target.Dependency {
     static var application: Target.Dependency {
         .target(name: Target.application.name)
@@ -127,6 +142,12 @@ extension Target.Dependency {
 }
 
 // MARK: - Adapter
+extension Array where Element == Target {
+    static var adapters: Self {
+        [.Adapter.driven]
+    }
+}
+
 extension Target.Adapter {
     static var driven: Target {
         .target(
@@ -150,22 +171,16 @@ extension Target.Dependency.Adapter {
 }
 
 // MARK: - Feature
-extension Target.Feature {
-    static var searchRepository: Target {
-        .target(
-            name: "SearchRepositoryFeature",
-            dependencies: [
-                .designSystem,
-                .domain,
-                .featureBuilder,
-                .ExternalLibrary.dependencies,
-                .Port.driving
-            ],
-            path: "Sources/Feature/SearchRepository",
-            swiftSettings: .forFeatureTarget
-        )
+extension Array where Element == Target {
+    static var features: Self {
+        [
+            .Feature.repositoryDetail,
+            .Feature.searchRepository
+        ]
     }
+}
 
+extension Target.Feature {
     static var repositoryDetail: Target {
         .target(
             name: "RepositoryDetailFeature",
@@ -180,9 +195,30 @@ extension Target.Feature {
             swiftSettings: .forFeatureTarget
         )
     }
+
+    static var searchRepository: Target {
+        .target(
+            name: "SearchRepositoryFeature",
+            dependencies: [
+                .designSystem,
+                .domain,
+                .featureBuilder,
+                .ExternalLibrary.dependencies,
+                .Port.driving
+            ],
+            path: "Sources/Feature/SearchRepository",
+            swiftSettings: .forFeatureTarget
+        )
+    }
 }
 
 // MARK: - Infra
+extension Array where Element == Target {
+    static var infras: Self {
+        [.Infra.gitHubAPI]
+    }
+}
+
 extension Target.Infra {
     // 自動生成されるコードがUpcoming Featureに未対応のため、swiftSettingsを指定しない
     // https://github.com/apple/swift-openapi-generator/issues/777
@@ -209,7 +245,29 @@ extension Target.Dependency.Infra {
 }
 
 // MARK: - Port
+extension Array where Element == Target {
+    static var ports: Self {
+        [
+            .Port.driven,
+            .Port.driving
+        ]
+    }
+}
+
 extension Target.Port {
+    static var driven: Target {
+        .target(
+            name: "DrivenPort",
+            dependencies: [
+                .domain,
+                .ExternalLibrary.dependencies,
+                .ExternalLibrary.dependenciesMacros
+            ],
+            path: "Sources/Port/Driven",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+
     static var driving: Target {
         .target(
             name: "DrivingPort",
@@ -223,31 +281,28 @@ extension Target.Port {
         )
     }
 
-    static var driven: Target {
-        .target(
-            name: "DrivenPort",
-            dependencies: [
-                .domain,
-                .ExternalLibrary.dependencies,
-                .ExternalLibrary.dependenciesMacros
-            ],
-            path: "Sources/Port/Driven",
-            swiftSettings: .allUpcomingFeatures
-        )
-    }
 }
 
 extension Target.Dependency.Port {
-    static var driving: Target.Dependency {
-        .target(name: Target.Port.driving.name)
-    }
-
     static var driven: Target.Dependency {
         .target(name: Target.Port.driven.name)
+    }
+
+    static var driving: Target.Dependency {
+        .target(name: Target.Port.driving.name)
     }
 }
 
 // MARK: - Tests
+extension Array where Element == Target {
+    static var tests: [Target] {
+        [
+            .Tests.application,
+            .Tests.Adapter.driven
+        ]
+    }
+}
+
 extension Target.Tests {
     static var application: Target {
         .testTarget(
