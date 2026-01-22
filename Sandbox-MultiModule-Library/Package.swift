@@ -11,13 +11,15 @@ let package = Package(
             name: "Sandbox-MultiModule-Library",
             targets: [
                 Target.application.name,
-                Target.Adapter.driven.name,
+                Target.Adapter.Driven.getRepositoryDetail.name,
+                Target.Adapter.Driven.searchRepository.name,
                 Target.Feature.repositoryDetail.name,
                 Target.Feature.searchRepository.name
             ]
         ),
         .forDev(.application),
-        .forDev(.Adapter.driven),
+        .forDev(.Adapter.Driven.getRepositoryDetail),
+        .forDev(.Adapter.Driven.searchRepository),
         .forDev(.Feature.repositoryDetail),
         .forDev(.Feature.searchRepository)
     ],
@@ -31,18 +33,24 @@ let package = Package(
 )
 
 extension Target {
-    enum Adapter {}
+    enum Adapter {
+        enum Driven {}
+    }
     enum Feature {}
     enum Infra {}
     enum Port {}
 
     enum Tests {
-        enum Adapter {}
+        enum Adapter {
+            enum Driven {}
+        }
     }
 }
 
 extension Target.Dependency {
-    enum Adapter {}
+    enum Adapter {
+        enum Driven {}
+    }
     enum ExternalLibrary {}
     enum Infra {}
     enum Port {}
@@ -144,29 +152,50 @@ extension Target.Dependency {
 // MARK: - Adapter
 extension Array where Element == Target {
     static var adapters: Self {
-        [.Adapter.driven]
+        [
+            .Adapter.Driven.getRepositoryDetail,
+            .Adapter.Driven.searchRepository
+        ]
     }
 }
 
-extension Target.Adapter {
-    static var driven: Target {
+extension Target.Adapter.Driven {
+    static var getRepositoryDetail: Target {
         .target(
-            name: "DrivenAdapter",
+            name: "GetRepositoryDetailAdapter",
             dependencies: [
                 .domain,
-                .Infra.gitHubAPI,
                 .ExternalLibrary.dependencies,
+                .Infra.gitHubAPI,
                 .Port.driven
             ],
-            path: "Sources/Adapter/Driven",
+            path: "Sources/Adapter/Driven/GetRepositoryDetail",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+
+    static var searchRepository: Target {
+        .target(
+            name: "SearchRepositoryAdapter",
+            dependencies: [
+                .domain,
+                .ExternalLibrary.dependencies,
+                .Infra.gitHubAPI,
+                .Port.driven
+            ],
+            path: "Sources/Adapter/Driven/SearchRepository",
             swiftSettings: .allUpcomingFeatures
         )
     }
 }
 
-extension Target.Dependency.Adapter {
-    static var driven: Target.Dependency {
-        .target(name: Target.Adapter.driven.name)
+extension Target.Dependency.Adapter.Driven {
+    static var getRepositoryDetail: Target.Dependency {
+        .target(name: Target.Adapter.Driven.getRepositoryDetail.name)
+    }
+
+    static var searchRepository: Target.Dependency {
+        .target(name: Target.Adapter.Driven.searchRepository.name)
     }
 }
 
@@ -298,7 +327,8 @@ extension Array where Element == Target {
     static var tests: [Target] {
         [
             .Tests.application,
-            .Tests.Adapter.driven
+            .Tests.Adapter.Driven.getRepositoryDetail,
+            .Tests.Adapter.Driven.searchRepository
         ]
     }
 }
@@ -314,12 +344,21 @@ extension Target.Tests {
     }
 }
 
-extension Target.Tests.Adapter {
-    static var driven: Target {
+extension Target.Tests.Adapter.Driven {
+    static var getRepositoryDetail: Target {
         .testTarget(
-            name: "DrivenAdapterTests",
-            dependencies: [.Adapter.driven],
-            path: "Tests/Adapter/Driven",
+            name: "GetRepositoryDetailAdapterTests",
+            dependencies: [.Adapter.Driven.getRepositoryDetail],
+            path: "Tests/Adapter/Driven/GetRepositoryDetail",
+            swiftSettings: .allUpcomingFeatures
+        )
+    }
+
+    static var searchRepository: Target {
+        .testTarget(
+            name: "SearchRepositoryAdapterTests",
+            dependencies: [.Adapter.Driven.searchRepository],
+            path: "Tests/Adapter/Driven/SearchRepository",
             swiftSettings: .allUpcomingFeatures
         )
     }

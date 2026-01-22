@@ -20,6 +20,7 @@ extension SearchRepositoryPort: DependencyKey {
                 .ok
                 .body
                 .json
+
             return response.items.compactMap { item in
                 guard let htmlUrl = URL(string: item.htmlUrl) else { return nil }
                 return SearchResultItem(
