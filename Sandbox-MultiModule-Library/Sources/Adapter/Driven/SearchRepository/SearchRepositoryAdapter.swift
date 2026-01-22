@@ -5,15 +5,15 @@
 //  Created by Shumpei Nagata on 2026/01/20.
 //
 
-public import Dependencies
+import Dependencies
 import Domain
-public import DrivenPort
+package import DrivenPort
 import Foundation
 import GitHubAPI
 
 // MARK: - DependencyKey
 extension SearchRepositoryPort: DependencyKey {
-    public static let liveValue = Self(
+    package static let liveValue = Self(
         search: { query in
             @Dependency(\.gitHubAPI) var gitHubAPI
             let response = try await gitHubAPI.searchRepos(query: .init(q: query))
