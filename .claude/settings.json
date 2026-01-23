@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "ios-dev@shumpei-nagata/cc-plugins-ios": true
+  }
+}
