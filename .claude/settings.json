@@ -1,5 +1,8 @@
 {
   "enabledPlugins": {
     "ios-dev@cc-plugins-ios": true
+  },
+  "env" : {
+    "ENABLE_TOOL_SEARCH": "true"
   }
 }
