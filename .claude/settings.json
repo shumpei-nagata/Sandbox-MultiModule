@@ -1,0 +1,5 @@
+{
+  "plugins": [
+    "github:shumpei-nagata/cc-plugins-ios:ios-dev"
+  ]
+}
