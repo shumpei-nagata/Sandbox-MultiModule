@@ -69,6 +69,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5EE57BE82F1E496100F3C209 /* Build configuration list for PBXNativeTarget "Sandbox-MultiModule-iOSApp" */;
 			buildPhases = (
+				5EA74EFA2F27CA4900C96E36 /* SwiftLint */,
 				5EE57BD92F1E496000F3C209 /* Sources */,
 				5EE57BDA2F1E496000F3C209 /* Frameworks */,
 				5EE57BDB2F1E496000F3C209 /* Resources */,
@@ -132,6 +133,30 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5EA74EFA2F27CA4900C96E36 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/",
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRC_ROOT)",
+				"",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nchanged_files=$(git diff --name-only --diff-filter=ACM HEAD | grep '\\.swift$')\necho \"$changed_files\" | xargs --no-run-if-empty \\\n    xcrun --sdk macosx \\\n        swift package \\\n        --package-path ../BuildTools \\\n        plugin \\\n        --allow-writing-to-package-directory \\\n        --allow-writing-to-directory ./ \\\n        swiftlint --config ../.swiftlint.yml --fix --format\n\nxcrun --sdk macosx \\\n    swift package \\\n    --package-path ../BuildTools \\\n    plugin \\\n    --allow-writing-to-package-directory \\\n    --allow-writing-to-directory ./ \\\n    swiftlint --config ../.swiftlint.yml\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5EE57BD92F1E496000F3C209 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -180,7 +205,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -242,7 +267,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

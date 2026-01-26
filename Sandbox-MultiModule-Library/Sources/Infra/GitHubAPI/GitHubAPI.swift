@@ -9,7 +9,7 @@ import Dependencies
 import OpenAPIURLSession
 
 extension Client: DependencyKey {
-    package static let liveValue = try! Self(
+    package static let liveValue = try! Self( // swiftlint:disable:this force_try
         serverURL: Servers.Server1.url(),
         transport: URLSessionTransport()
     )

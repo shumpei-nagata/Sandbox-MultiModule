@@ -1,5 +1,5 @@
 //
-//  Sandbox_MultiModule_iOSApp.swift
+//  MainApp.swift
 //  Sandbox-MultiModule-iOSApp
 //
 //  Created by Shumpei Nagata on 2026/01/19.
@@ -10,7 +10,7 @@ import FeatureBuilder
 import SwiftUI
 
 @main
-struct Sandbox_MultiModule_iOSApp: App {
+struct MainApp: App {
     @Dependency(\.searchRepositoryFeatureBuilder.build) private var searchRepositoryView
 
     var body: some Scene {
