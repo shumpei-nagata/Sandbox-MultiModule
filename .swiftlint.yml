@@ -1,0 +1,7 @@
+included:
+  - Sandbox-MultiModule-Library
+  - Sandbox-MultiModule-iOSApp
+
+excluded:
+  - "*/.build"
+  - "*/Package.swift"

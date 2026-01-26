@@ -12,6 +12,7 @@
 
 /* Begin PBXFileReference section */
 		5E72FB1C2F1E4B290022D77E /* Sandbox-MultiModule-Library */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "Sandbox-MultiModule-Library"; path = "../Sandbox-MultiModule-Library"; sourceTree = SOURCE_ROOT; };
+		5EA74EF92F27C6BC00C96E36 /* BuildTools */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = BuildTools; path = ../BuildTools; sourceTree = SOURCE_ROOT; };
 		5EE57BDD2F1E496000F3C209 /* Sandbox-MultiModule-iOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sandbox-MultiModule-iOSApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -45,6 +46,7 @@
 		5EE57BD42F1E496000F3C209 = {
 			isa = PBXGroup;
 			children = (
+				5EA74EF92F27C6BC00C96E36 /* BuildTools */,
 				5E72FB1C2F1E4B290022D77E /* Sandbox-MultiModule-Library */,
 				5EE57BDF2F1E496000F3C209 /* Sandbox-MultiModule-iOSApp */,
 				5E2CD3E52F1F460900D867F4 /* Frameworks */,
