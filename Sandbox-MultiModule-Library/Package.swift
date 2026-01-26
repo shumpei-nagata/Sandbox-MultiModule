@@ -22,10 +22,12 @@ let package = Package(
         .forDev(.Feature.searchRepository)
     ],
     dependencies: [
+        .prefire,
         .swiftDependencies,
         .swiftOpenAPIGenerator,
         .swiftOpenAPIRuntime,
-        .swiftOpenAPIURLSession
+        .swiftOpenAPIURLSession,
+        .swiftSnapshotTesting
     ],
     targets: .allTargets
 )
@@ -327,6 +329,13 @@ extension Target.Tests.Adapter {
 
 // MARK: - External Library
 extension Package.Dependency {
+    static var prefire: Package.Dependency {
+        .package(
+            url: "https://github.com/BarredEwe/Prefire",
+            from: "5.3.0"
+        )
+    }
+
     static var swiftDependencies: Package.Dependency {
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",
@@ -354,6 +363,13 @@ extension Package.Dependency {
             from: "1.2.0"
         )
     }
+
+    static var swiftSnapshotTesting: Package.Dependency {
+        .package(
+            url: "https://github.com/pointfreeco/swift-snapshot-testing",
+            from: "1.18.7"
+        )
+    }
 }
 
 extension Target.Dependency.ExternalLibrary {
@@ -372,11 +388,27 @@ extension Target.Dependency.ExternalLibrary {
     static var openAPIURLSession: Target.Dependency {
         .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession")
     }
+
+    static var prefire: Target.Dependency {
+        .product(name: "Prefire", package: "Prefire")
+    }
+
+    static var snapshotTesting: Target.Dependency {
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+    }
 }
 
 extension Target.PluginUsage.ExternalLibrary {
     static var openAPIGenerator: Target.PluginUsage {
         .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
+    }
+
+    static var prefirePlaybookPlugin: Target.PluginUsage {
+        .plugin(name: "PrefirePlaybookPlugin", package: "Prefire")
+    }
+
+    static var prefireTestsPlugin: Target.PluginUsage {
+        .plugin(name: "PrefireTestsPlugin", package: "Prefire")
     }
 }
 
