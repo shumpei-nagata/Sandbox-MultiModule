@@ -6,6 +6,7 @@
 //
 
 public import Dependencies
+import DesignSystem
 import Domain
 public import FeatureBuilder
 import Prefire
@@ -59,11 +60,7 @@ struct RepositoryDetailContentView: View {
             }
             .padding()
         }
-        .overlay {
-            if isLoading {
-                ProgressView()
-            }
-        }
+        .loadingOverlay(isLoading: isLoading)
     }
 
     @ViewBuilder
@@ -102,25 +99,11 @@ struct RepositoryDetailContentView: View {
             GridItem(.flexible()),
             GridItem(.flexible())
         ], spacing: 16) {
-            statItem(value: detail.stargazersCount, label: "Stars", icon: "star")
-            statItem(value: detail.forksCount, label: "Forks", icon: "tuningfork")
-            statItem(value: detail.openIssuesCount, label: "Issues", icon: "exclamationmark.circle")
-            statItem(value: detail.watchersCount, label: "Watchers", icon: "eye")
-            statItem(value: detail.size, label: "Size (KB)", icon: "externaldrive")
-        }
-    }
-
-    @ViewBuilder
-    private func statItem(value: Int, label: String, icon: String) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundStyle(.secondary)
-            Text("\(value)")
-                .font(.headline)
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            StatBadge.stars(detail.stargazersCount)
+            StatBadge.forks(detail.forksCount)
+            StatBadge.issues(detail.openIssuesCount)
+            StatBadge.watchers(detail.watchersCount)
+            StatBadge.size(detail.size)
         }
     }
 
@@ -157,13 +140,7 @@ struct RepositoryDetailContentView: View {
                 .font(.headline)
             FlowLayout(spacing: 8) {
                 ForEach(topics, id: \.self) { topic in
-                    Text(topic)
-                        .font(.caption)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.1))
-                        .foregroundStyle(.blue)
-                        .clipShape(Capsule())
+                    TopicTag(topic)
                 }
             }
         }

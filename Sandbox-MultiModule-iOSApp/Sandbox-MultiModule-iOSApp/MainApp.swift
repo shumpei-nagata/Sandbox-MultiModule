@@ -6,6 +6,7 @@
 //
 
 import Dependencies
+import DesignSystem
 import FeatureBuilder
 import SwiftUI
 
@@ -25,9 +26,13 @@ struct MainApp: App {
                     searchRepositoryView()
                 }
 
+                #if DEBUG
                 Tab("Developer", systemImage: "wrench.and.screwdriver") {
                     NavigationStack {
                         List {
+                            NavigationLink("DesignSystem") {
+                                DesignSystemPlaybook()
+                            }
                             NavigationLink("RepositoryDetail") {
                                 repositoryDetailPlaybook()
                             }
@@ -38,6 +43,7 @@ struct MainApp: App {
                         .navigationTitle("Developer")
                     }
                 }
+                #endif
             }
         }
     }

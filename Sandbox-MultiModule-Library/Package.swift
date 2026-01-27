@@ -16,6 +16,7 @@ let package = Package(
                 Target.Feature.searchRepository.name
             ]
         ),
+        .forDev(.designSystem),
         .forDev(.useCase),
         .forDev(.Adapter.out),
         .forDev(.Feature.repositoryDetail),
@@ -86,8 +87,14 @@ extension Target {
     static var designSystem: Target {
         .target(
             name: "DesignSystem",
+            dependencies: [
+                .ExternalLibrary.prefire
+            ],
             path: "Sources/DesignSystem",
-            swiftSettings: .allUpcomingFeatures
+            swiftSettings: .forPrefire,
+            plugins: [
+                .ExternalLibrary.prefirePlaybookPlugin
+            ]
         )
     }
 
@@ -197,7 +204,7 @@ extension Target.Feature {
                 .Port.in
             ],
             path: "Sources/Feature/RepositoryDetail",
-            swiftSettings: .forFeatureTarget,
+            swiftSettings: .forPrefire,
             plugins: [
                 .ExternalLibrary.prefirePlaybookPlugin
             ]
@@ -216,7 +223,7 @@ extension Target.Feature {
                 .Port.in
             ],
             path: "Sources/Feature/SearchRepository",
-            swiftSettings: .forFeatureTarget,
+            swiftSettings: .forPrefire,
             plugins: [
                 .ExternalLibrary.prefirePlaybookPlugin
             ]
@@ -302,7 +309,6 @@ extension Target.Port {
             swiftSettings: .allUpcomingFeatures
         )
     }
-
 }
 
 extension Target.Dependency.Port {
@@ -319,6 +325,7 @@ extension Target.Dependency.Port {
 extension Array where Element == Target {
     static var tests: [Target] {
         [
+            .Tests.designSystem,
             .Tests.useCase,
             .Tests.Adapter.out,
             .Tests.Feature.repositoryDetail,
@@ -328,6 +335,22 @@ extension Array where Element == Target {
 }
 
 extension Target.Tests {
+    static var designSystem: Target {
+        .testTarget(
+            name: "DesignSystemTests",
+            dependencies: [
+                .designSystem,
+                .ExternalLibrary.prefire,
+                .ExternalLibrary.snapshotTesting
+            ],
+            path: "Tests/DesignSystem",
+            swiftSettings: .allUpcomingFeatures,
+            plugins: [
+                .ExternalLibrary.prefireTestsPlugin
+            ]
+        )
+    }
+
     static var useCase: Target {
         .testTarget(
             name: "UseCaseTests",
@@ -484,13 +507,13 @@ extension SwiftSetting {
         .memberImportVisibility,
         .inferIsolatedConformances,
         .nonisolatedNonsendingByDefault,
-        .immutableWeakCaptures,
+        .immutableWeakCaptures
     ]
 }
 
 extension Array where Element == SwiftSetting {
     static let allUpcomingFeatures: Self = Element.allUpcomingFeatures
-    static let forFeatureTarget: Self = [
+    static let forPrefire: Self = [
         .existentialAny,
         .memberImportVisibility,
         .inferIsolatedConformances,
@@ -500,6 +523,6 @@ extension Array where Element == SwiftSetting {
         .define(
             "PLAYBOOK_DISABLED",
             .when(configuration: .release)
-        ),
+        )
     ]
 }

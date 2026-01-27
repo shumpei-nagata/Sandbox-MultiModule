@@ -6,6 +6,7 @@
 //
 
 public import Dependencies
+import DesignSystem
 import Domain
 public import FeatureBuilder
 import Prefire
@@ -78,11 +79,7 @@ struct SearchRepositoryContentView: View {
                 ContentUnavailableView.search(text: query)
             }
         }
-        .overlay {
-            if isLoading {
-                ProgressView()
-            }
-        }
+        .loadingOverlay(isLoading: isLoading)
     }
 }
 
