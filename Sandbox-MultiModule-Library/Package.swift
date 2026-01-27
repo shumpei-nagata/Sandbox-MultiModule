@@ -193,10 +193,14 @@ extension Target.Feature {
                 .domain,
                 .featureBuilder,
                 .ExternalLibrary.dependencies,
+                .ExternalLibrary.prefire,
                 .Port.in
             ],
             path: "Sources/Feature/RepositoryDetail",
-            swiftSettings: .forFeatureTarget
+            swiftSettings: .forFeatureTarget,
+            plugins: [
+                .ExternalLibrary.prefirePlaybookPlugin
+            ]
         )
     }
 
@@ -208,11 +212,25 @@ extension Target.Feature {
                 .domain,
                 .featureBuilder,
                 .ExternalLibrary.dependencies,
+                .ExternalLibrary.prefire,
                 .Port.in
             ],
             path: "Sources/Feature/SearchRepository",
-            swiftSettings: .forFeatureTarget
+            swiftSettings: .forFeatureTarget,
+            plugins: [
+                .ExternalLibrary.prefirePlaybookPlugin
+            ]
         )
+    }
+}
+
+extension Target.Dependency.Feature {
+    static var repositoryDetail: Target.Dependency {
+        .target(name: Target.Feature.repositoryDetail.name)
+    }
+
+    static var searchRepository: Target.Dependency {
+        .target(name: Target.Feature.searchRepository.name)
     }
 }
 
@@ -302,7 +320,9 @@ extension Array where Element == Target {
     static var tests: [Target] {
         [
             .Tests.useCase,
-            .Tests.Adapter.out
+            .Tests.Adapter.out,
+            .Tests.Feature.repositoryDetail,
+            .Tests.Feature.searchRepository
         ]
     }
 }
@@ -325,6 +345,40 @@ extension Target.Tests.Adapter {
             dependencies: [.Adapter.out],
             path: "Tests/Adapter/Out",
             swiftSettings: .allUpcomingFeatures
+        )
+    }
+}
+
+extension Target.Tests.Feature {
+    static var repositoryDetail: Target {
+        .testTarget(
+            name: "RepositoryDetailFeatureTests",
+            dependencies: [
+                .ExternalLibrary.prefire,
+                .ExternalLibrary.snapshotTesting,
+                .Feature.repositoryDetail
+            ],
+            path: "Tests/Feature/RepositoryDetail",
+            swiftSettings: .allUpcomingFeatures,
+            plugins: [
+                .ExternalLibrary.prefireTestsPlugin
+            ]
+        )
+    }
+
+    static var searchRepository: Target {
+        .testTarget(
+            name: "SearchRepositoryFeatureTests",
+            dependencies: [
+                .ExternalLibrary.prefire,
+                .ExternalLibrary.snapshotTesting,
+                .Feature.searchRepository
+            ],
+            path: "Tests/Feature/SearchRepository",
+            swiftSettings: .allUpcomingFeatures,
+            plugins: [
+                .ExternalLibrary.prefireTestsPlugin
+            ]
         )
     }
 }
@@ -436,7 +490,16 @@ extension SwiftSetting {
 
 extension Array where Element == SwiftSetting {
     static let allUpcomingFeatures: Self = Element.allUpcomingFeatures
-    static let forFeatureTarget: Self = .allUpcomingFeatures + [
-        .defaultIsolation(MainActor.self)
+    static let forFeatureTarget: Self = [
+        .existentialAny,
+        .memberImportVisibility,
+        .inferIsolatedConformances,
+        .nonisolatedNonsendingByDefault,
+        .immutableWeakCaptures,
+        .defaultIsolation(MainActor.self),
+        .define(
+            "PLAYBOOK_DISABLED",
+            .when(configuration: .release)
+        ),
     ]
 }

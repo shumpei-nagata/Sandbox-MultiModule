@@ -28,3 +28,21 @@ public extension DependencyValues {
         set { self[SearchRepositoryFeatureBuilder.self] = newValue }
     }
 }
+
+@DependencyClient
+public struct SearchRepositoryFeaturePlaybookBuilder: Sendable {
+    public var build: @Sendable @MainActor () -> AnyView = {
+        .init(EmptyView())
+    }
+}
+
+extension SearchRepositoryFeaturePlaybookBuilder: TestDependencyKey {
+    public static let testValue = Self()
+}
+
+public extension DependencyValues {
+    var searchRepositoryFeaturePlaybookBuilder: SearchRepositoryFeaturePlaybookBuilder {
+        get { self[SearchRepositoryFeaturePlaybookBuilder.self] }
+        set { self[SearchRepositoryFeaturePlaybookBuilder.self] = newValue }
+    }
+}

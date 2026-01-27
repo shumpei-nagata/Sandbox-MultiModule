@@ -8,34 +8,18 @@
 public import Dependencies
 import Domain
 public import FeatureBuilder
-import InPort
+import Prefire
 import SwiftUI
 
+// MARK: - RepositoryDetailView
 struct RepositoryDetailView: View {
     @State private var viewModel: RepositoryDetailViewModel
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let detail = viewModel.detail {
-                    headerSection(detail: detail)
-                    Divider()
-                    statsSection(detail: detail)
-                    Divider()
-                    infoSection(detail: detail)
-                    if !detail.topics.isEmpty {
-                        Divider()
-                        topicsSection(topics: detail.topics)
-                    }
-                }
-            }
-            .padding()
-        }
-        .overlay {
-            if viewModel.isLoading {
-                ProgressView()
-            }
-        }
+        RepositoryDetailContentView(
+            detail: viewModel.detail,
+            isLoading: viewModel.isLoading
+        )
         .navigationTitle(viewModel.item.name)
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -50,6 +34,36 @@ struct RepositoryDetailView: View {
 
     init(item: SearchResultItem) {
         _viewModel = State(initialValue: RepositoryDetailViewModel(item: item))
+    }
+}
+
+// MARK: - RepositoryDetailContentView
+struct RepositoryDetailContentView: View {
+    let detail: RepositoryDetail?
+    let isLoading: Bool
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                if let detail {
+                    headerSection(detail: detail)
+                    Divider()
+                    statsSection(detail: detail)
+                    Divider()
+                    infoSection(detail: detail)
+                    if !detail.topics.isEmpty {
+                        Divider()
+                        topicsSection(topics: detail.topics)
+                    }
+                }
+            }
+            .padding()
+        }
+        .overlay {
+            if isLoading {
+                ProgressView()
+            }
+        }
     }
 
     @ViewBuilder
@@ -163,69 +177,66 @@ extension RepositoryDetailFeatureBuilder: DependencyKey {
     }
 }
 
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        withDependencies {
-            $0.repositoryDetailUseCase.execute = { _, _ in
-                .init(
-                    id: 1,
-                    name: "swift",
-                    fullName: "apple/swift",
-                    owner: .init(
-                        id: 1,
-                        login: "apple",
-                        avatarUrl: URL(string: "https://avatars.githubusercontent.com/u/10639145")!
-                    ),
-                    description: "The Swift Programming Language",
-                    htmlUrl: URL(string: "https://github.com/apple/swift")!,
-                    cloneUrl: URL(string: "https://github.com/apple/swift.git")!,
-                    sshUrl: "git@github.com:apple/swift.git",
-                    language: "Swift",
-                    stargazersCount: 65_000,
-                    watchersCount: 65_000,
-                    forksCount: 10_000,
-                    openIssuesCount: 500,
-                    size: 800_000,
-                    defaultBranch: "main",
-                    topics: ["swift", "compiler", "llvm", "programming-language"],
-                    visibility: "public",
-                    hasIssues: true,
-                    hasProjects: false,
-                    hasWiki: false,
-                    hasPages: false,
-                    hasDiscussions: true,
-                    archived: false,
-                    disabled: false,
-                    isTemplate: false,
-                    createdAt: .now.addingTimeInterval(-86_400 * 365 * 10),
-                    updatedAt: .now,
-                    pushedAt: .now
-                )
-            }
-        } operation: {
-            RepositoryDetailView(
-                item: .init(
-                    id: 1,
-                    name: "swift",
-                    fullName: "apple/swift",
-                    owner: .init(
-                        id: 0,
-                        login: "apple",
-                        avatarUrl: .temporaryDirectory
-                    ),
-                    description: "The Swift Programming Language",
-                    htmlUrl: URL(string: "https://github.com/apple/swift")!,
-                    language: "Swift",
-                    stargazersCount: 65_000,
-                    watchersCount: 65_000,
-                    forksCount: 10_000,
-                    openIssuesCount: 500,
-                    defaultBranch: "main",
-                    createdAt: .now,
-                    updatedAt: .now
-                )
+extension RepositoryDetailFeaturePlaybookBuilder: DependencyKey {
+    public static let liveValue = Self {
+        .init(
+            PlaybookView(
+                isComponent: true,
+                previewModels: PreviewModels.models
             )
-        }
+        )
     }
+}
+
+// MARK: - Preview
+#Preview("With Detail") {
+    RepositoryDetailContentView(
+        detail: RepositoryDetail(
+            id: 1,
+            name: "swift",
+            fullName: "swiftlang/swift",
+            owner: .init(
+                id: 1,
+                login: "swiftlang",
+                avatarUrl: .init(string: "https://avatars.githubusercontent.com/u/10639145")!
+            ),
+            description: "The Swift Programming Language",
+            htmlUrl: .temporaryDirectory,
+            cloneUrl: .temporaryDirectory,
+            sshUrl: "",
+            language: "Swift",
+            stargazersCount: 65_000,
+            watchersCount: 65_000,
+            forksCount: 10_000,
+            openIssuesCount: 500,
+            size: 800_000,
+            defaultBranch: "main",
+            topics: [
+                "swift",
+                "compiler",
+                "llvm",
+                "programming-language"
+            ],
+            visibility: "public",
+            hasIssues: true,
+            hasProjects: false,
+            hasWiki: false,
+            hasPages: false,
+            hasDiscussions: true,
+            archived: false,
+            disabled: false,
+            isTemplate: false,
+            createdAt: .distantPast,
+            updatedAt: .init(timeIntervalSince1970: 1_767_193_200),
+            pushedAt: .init(timeIntervalSince1970: 1_767_193_200)
+        ),
+        isLoading: false
+    )
+}
+
+#Preview("Loading") {
+    RepositoryDetailContentView(
+        detail: nil,
+        isLoading: true
+    )
 }

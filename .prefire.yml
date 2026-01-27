@@ -1,0 +1,15 @@
+# https://github.com/BarredEwe/Prefire/blob/main/Configuration.md
+playbook_configuration:
+  imports:
+    - Dependencies
+    - Domain
+    - InPort
+
+test_configuration:
+  imports:
+    - Dependencies
+    - Domain
+    - InPort
+  simulator_device: "iPhone18,2"
+  snapshot_devices:
+    - "iPhone 16 Pro Max"
