@@ -22,8 +22,8 @@ extension SearchRepositoryFeatureBuilder: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    public var searchRepositoryFeatureBuilder: SearchRepositoryFeatureBuilder {
+public extension DependencyValues {
+    var searchRepositoryFeatureBuilder: SearchRepositoryFeatureBuilder {
         get { self[SearchRepositoryFeatureBuilder.self] }
         set { self[SearchRepositoryFeatureBuilder.self] = newValue }
     }

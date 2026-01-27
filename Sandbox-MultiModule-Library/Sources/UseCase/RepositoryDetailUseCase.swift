@@ -11,10 +11,10 @@ import OutPort
 
 // MARK: - DependencyKey
 extension RepositoryDetailUseCase: DependencyKey {
-    package static let liveValue = Self(
-        execute: { owner, repo in
-            @Dependency(\.getRepositoryDetailPort) var port
-            return try await port.get(owner: owner, repo: repo)
-        }
-    )
+    package static let liveValue = Self { owner, repo in
+        @Dependency(\.getRepositoryDetailPort)
+        var port
+
+        return try await port.get(owner: owner, repo: repo)
+    }
 }

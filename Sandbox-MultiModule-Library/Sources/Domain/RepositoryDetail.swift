@@ -99,8 +99,8 @@ public struct RepositoryDetail: Sendable, Hashable, Identifiable {
 }
 
 // MARK: - Owner
-extension RepositoryDetail {
-    public struct Owner: Sendable, Hashable {
+public extension RepositoryDetail {
+    struct Owner: Sendable, Hashable {
         public let id: Int
         public let login: String
         public let avatarUrl: URL

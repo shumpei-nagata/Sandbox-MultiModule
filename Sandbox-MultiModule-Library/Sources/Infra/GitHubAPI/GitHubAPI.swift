@@ -15,8 +15,8 @@ extension Client: DependencyKey {
     )
 }
 
-extension DependencyValues {
-    package var gitHubAPI: Client {
+package extension DependencyValues {
+    var gitHubAPI: Client {
         get { self[Client.self] }
         set { self[Client.self] = newValue }
     }

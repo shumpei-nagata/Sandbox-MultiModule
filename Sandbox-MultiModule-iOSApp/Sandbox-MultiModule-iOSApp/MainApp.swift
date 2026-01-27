@@ -11,7 +11,8 @@ import SwiftUI
 
 @main
 struct MainApp: App {
-    @Dependency(\.searchRepositoryFeatureBuilder.build) private var searchRepositoryView
+    @Dependency(\.searchRepositoryFeatureBuilder.build)
+    private var searchRepositoryView
 
     var body: some Scene {
         WindowGroup {

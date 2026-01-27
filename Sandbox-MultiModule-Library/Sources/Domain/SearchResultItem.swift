@@ -57,8 +57,8 @@ public struct SearchResultItem: Sendable, Hashable, Identifiable {
 }
 
 // MARK: - Owner
-extension SearchResultItem {
-    public struct Owner: Sendable, Hashable {
+public extension SearchResultItem {
+    struct Owner: Sendable, Hashable {
         public let id: Int
         public let login: String
         public let avatarUrl: URL

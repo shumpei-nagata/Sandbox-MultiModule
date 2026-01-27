@@ -21,8 +21,8 @@ extension SearchRepositoryPort: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    package var searchRepositoryPort: SearchRepositoryPort {
+package extension DependencyValues {
+    var searchRepositoryPort: SearchRepositoryPort {
         get { self[SearchRepositoryPort.self] }
         set { self[SearchRepositoryPort.self] = newValue }
     }

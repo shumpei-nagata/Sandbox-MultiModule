@@ -11,10 +11,10 @@ import OutPort
 
 // MARK: - DependencyKey
 extension SearchRepositoryUseCase: DependencyKey {
-    package static let liveValue = Self(
-        execute: { query in
-            @Dependency(\.searchRepositoryPort) var port
-            return try await port.search(query: query)
-        }
-    )
+    package static let liveValue = Self { query in
+        @Dependency(\.searchRepositoryPort)
+        var port
+
+        return try await port.search(query: query)
+    }
 }

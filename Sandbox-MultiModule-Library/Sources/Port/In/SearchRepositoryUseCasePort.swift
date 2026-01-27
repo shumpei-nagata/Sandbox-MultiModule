@@ -21,8 +21,8 @@ extension SearchRepositoryUseCase: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    package var searchRepositoryUseCase: SearchRepositoryUseCase {
+package extension DependencyValues {
+    var searchRepositoryUseCase: SearchRepositoryUseCase {
         get { self[SearchRepositoryUseCase.self] }
         set { self[SearchRepositoryUseCase.self] = newValue }
     }

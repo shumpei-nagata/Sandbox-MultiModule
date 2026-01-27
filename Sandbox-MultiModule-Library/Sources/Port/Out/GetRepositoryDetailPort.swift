@@ -21,8 +21,8 @@ extension GetRepositoryDetailPort: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    package var getRepositoryDetailPort: GetRepositoryDetailPort {
+package extension DependencyValues {
+    var getRepositoryDetailPort: GetRepositoryDetailPort {
         get { self[GetRepositoryDetailPort.self] }
         set { self[GetRepositoryDetailPort.self] = newValue }
     }

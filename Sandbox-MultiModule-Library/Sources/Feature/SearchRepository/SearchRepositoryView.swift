@@ -7,13 +7,14 @@
 
 public import Dependencies
 import Domain
-import InPort
 public import FeatureBuilder
+import InPort
 import SwiftUI
 
 struct SearchRepositoryView: View {
     @State private var viewModel = SearchRepositoryViewModel()
-    @Dependency(\.repositoryDetailFeatureBuilder.build) private var repositoryDetailView
+    @Dependency(\.repositoryDetailFeatureBuilder.build)
+    private var repositoryDetailView
 
     var body: some View {
         NavigationStack {
@@ -43,7 +44,7 @@ struct SearchRepositoryView: View {
                 }
             }
             .overlay {
-                if viewModel.repositories.isEmpty && !viewModel.isLoading {
+                if viewModel.repositories.isEmpty, !viewModel.isLoading {
                     ContentUnavailableView.search(text: viewModel.query)
                 }
             }
@@ -71,37 +72,11 @@ struct SearchRepositoryView: View {
     }
 }
 
-@Observable
-final class SearchRepositoryViewModel {
-    var query: String = ""
-    var repositories: [SearchResultItem] = []
-    var isLoading: Bool = false
-    var showError: Bool = false
-    var errorMessage: String = ""
-
-    @ObservationIgnored
-    @Dependency(\.searchRepositoryUseCase) private var searchRepositoryUseCase
-
-    func search() async {
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            repositories = try await searchRepositoryUseCase.execute(query: query)
-        } catch {
-            errorMessage = error.localizedDescription
-            showError = true
-        }
-    }
-}
-
 // MARK: - DependencyKey
 extension SearchRepositoryFeatureBuilder: DependencyKey {
-    public static let liveValue = Self(
-        build: {
-            .init(SearchRepositoryView())
-        }
-    )
+    public static let liveValue = Self {
+        .init(SearchRepositoryView())
+    }
 }
 
 // MARK: - Preview

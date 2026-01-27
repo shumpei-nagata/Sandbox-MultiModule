@@ -9,7 +9,7 @@ excluded:
 # swift package --package-path BuildTools plugin --allow-writing-to-package-directory swiftlint rules | awk -F "|" '$3 ~ "no" && $7 ~ "no" { print $2 }' | tr -d ' ' | sed 's/^/  - /' | pbcopy
 disabled_rules:
   # - attribute_name_spacing
-  # - blanket_disable_command
+  - blanket_disable_command
   # - block_based_kvo
   # - class_delegate_protocol
   # - closing_brace
@@ -111,11 +111,11 @@ disabled_rules:
 
 # swift package --package-path BuildTools plugin --allow-writing-to-package-directory swiftlint rules | awk -F "|" '$3 ~ "yes" && $7 ~ "no" { print $2 }' | tr -d ' ' | sed 's/^/  - /' | pbcopy
 opt_in_rules:
-  - accessibility_label_for_image
-  - accessibility_trait_for_button
-  - anonymous_argument_in_multiline_closure
+  # - accessibility_label_for_image
+  # - accessibility_trait_for_button
+  # - anonymous_argument_in_multiline_closure
   - array_init
-  - async_without_await
+  # - async_without_await
   - attributes
   - balanced_xctest_lifecycle
   - closure_body_length
@@ -128,7 +128,7 @@ opt_in_rules:
   - contains_over_filter_is_empty
   - contains_over_first_not_nil
   - contains_over_range_nil_comparison
-  - contrasted_opening_brace
+  # - contrasted_opening_brace
   - convenience_type
   - direct_return
   - discarded_notification_center_observer
@@ -143,24 +143,24 @@ opt_in_rules:
   - empty_xctest_method
   - enum_case_associated_values_count
   - expiring_todo
-  - explicit_acl
-  - explicit_enum_raw_value
+  # - explicit_acl
+  # - explicit_enum_raw_value
   - explicit_init
-  - explicit_top_level_acl
-  - explicit_type_interface
+  # - explicit_top_level_acl
+  # - explicit_type_interface
   - extension_access_modifier
   - fallthrough
   - fatal_error_message
-  - file_header
-  - file_name
+  # - file_header
+  # - file_name
   - file_name_no_space
   - file_types_order
   - final_test_case
   - first_where
   - flatmap_over_map_reduce
-  - force_unwrapping
-  - function_default_parameter_at_end
-  - ibinspectable_in_extension
+  # - force_unwrapping
+  # - function_default_parameter_at_end
+  # - ibinspectable_in_extension
   - identical_operands
   - implicit_return
   - implicitly_unwrapped_optional
@@ -174,7 +174,7 @@ opt_in_rules:
   - literal_expression_end_indentation
   - local_doc_comment
   - lower_acl_than_parent
-  - missing_docs
+  # - missing_docs
   - modifier_order
   - multiline_arguments
   - multiline_arguments_brackets
@@ -184,16 +184,16 @@ opt_in_rules:
   - multiline_parameters
   - multiline_parameters_brackets
   - nimble_operator
-  - no_empty_block
-  - no_extension_access_modifier
-  - no_grouping_extension
-  - no_magic_numbers
+  # - no_empty_block
+  # - no_extension_access_modifier
+  # - no_grouping_extension
+  # - no_magic_numbers
   - non_overridable_class_declaration
   - nslocalizedstring_key
   - nslocalizedstring_require_bundle
   - number_separator
-  - object_literal
-  - one_declaration_per_file
+  # - object_literal
+  # - one_declaration_per_file
   - operator_usage_whitespace
   - optional_enum_case_matching
   - overridden_super_call
@@ -217,25 +217,25 @@ opt_in_rules:
   - quick_discouraged_call
   - quick_discouraged_focused_test
   - quick_discouraged_pending_test
-  - raw_value_for_camel_cased_codable_enum
+  # - raw_value_for_camel_cased_codable_enum
   - reduce_into
   - redundant_nil_coalescing
   - redundant_self
   - redundant_type_annotation
-  - required_deinit
+  # - required_deinit
   - required_enum_case
-  - return_value_from_void_function
+  # - return_value_from_void_function
   - self_binding
-  - shorthand_argument
+  # - shorthand_argument
   - shorthand_optional_binding
   - single_test_class
-  - sorted_enum_cases
+  # - sorted_enum_cases
   - sorted_first_last
   - sorted_imports
   - static_operator
-  - strict_fileprivate
+  # - strict_fileprivate
   - strong_iboutlet
-  - superfluous_else
+  # - superfluous_else
   - switch_case_on_newline
   - test_case_accessibility
   - toggle_bool
@@ -248,7 +248,7 @@ opt_in_rules:
   - unneeded_throws_rethrows
   - unowned_variable_capture
   - untyped_error_in_catch
-  - unused_parameter
+  # - unused_parameter
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_between_cases
   - vertical_whitespace_closing_braces
@@ -260,7 +260,7 @@ opt_in_rules:
 # swift package --package-path BuildTools plugin --allow-writing-to-package-directory swiftlint rules |   awk -F "|" '$7 ~ "yes" { print $2 }' | tr -d ' ' | sed 's/^/  - /' | pbcopy
 analyzer_rules:
   - capture_variable
-  - explicit_self
+  # - explicit_self
   - typesafe_array_init
   - unused_declaration
   - unused_import

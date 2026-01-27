@@ -7,16 +7,12 @@
 
 public import Dependencies
 import Domain
-import InPort
 public import FeatureBuilder
+import InPort
 import SwiftUI
 
 struct RepositoryDetailView: View {
     @State private var viewModel: RepositoryDetailViewModel
-
-    init(item: SearchResultItem) {
-        _viewModel = State(initialValue: RepositoryDetailViewModel(item: item))
-    }
 
     var body: some View {
         ScrollView {
@@ -50,6 +46,10 @@ struct RepositoryDetailView: View {
         } message: {
             Text(viewModel.errorMessage)
         }
+    }
+
+    init(item: SearchResultItem) {
+        _viewModel = State(initialValue: RepositoryDetailViewModel(item: item))
     }
 
     @ViewBuilder
@@ -156,92 +156,11 @@ struct RepositoryDetailView: View {
     }
 }
 
-// MARK: - FlowLayout
-struct FlowLayout: Layout {
-    var spacing: CGFloat = 8
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = layout(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(proposal: proposal, subviews: subviews)
-        for (index, position) in result.positions.enumerated() {
-            subviews[index].place(at: CGPoint(x: bounds.minX + position.x, y: bounds.minY + position.y), proposal: .unspecified)
-        }
-    }
-
-    private func layout(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var currentX: CGFloat = 0
-        var currentY: CGFloat = 0
-        var lineHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if currentX + size.width > maxWidth, currentX > 0 {
-                currentX = 0
-                currentY += lineHeight + spacing
-                lineHeight = 0
-            }
-            positions.append(CGPoint(x: currentX, y: currentY))
-            lineHeight = max(lineHeight, size.height)
-            currentX += size.width + spacing
-        }
-
-        return (CGSize(width: maxWidth, height: currentY + lineHeight), positions)
-    }
-}
-
-// MARK: - ViewModel
-@Observable
-final class RepositoryDetailViewModel {
-    let item: SearchResultItem
-    var detail: RepositoryDetail?
-    var isLoading: Bool = false
-    var showError: Bool = false
-    var errorMessage: String = ""
-
-    @ObservationIgnored
-    @Dependency(\.repositoryDetailUseCase) private var repositoryDetailUseCase
-
-    init(item: SearchResultItem) {
-        self.item = item
-    }
-
-    func load() async {
-        guard detail == nil else { return }
-
-        isLoading = true
-        defer { isLoading = false }
-
-        guard let owner = item.owner?.login else {
-            errorMessage = "Invalid repository name"
-            showError = true
-            return
-        }
-
-        do {
-            detail = try await repositoryDetailUseCase.execute(
-                owner: owner,
-                repo: item.name
-            )
-        } catch {
-            errorMessage = error.localizedDescription
-            showError = true
-        }
-    }
-}
-
 // MARK: - DependencyKey
 extension RepositoryDetailFeatureBuilder: DependencyKey {
-    public static let liveValue = Self(
-        build: { item in
-            .init(RepositoryDetailView(item: item))
-        }
-    )
+    public static let liveValue = Self { item in
+        .init(RepositoryDetailView(item: item))
+    }
 }
 
 // MARK: - Preview
@@ -263,11 +182,11 @@ extension RepositoryDetailFeatureBuilder: DependencyKey {
                     cloneUrl: URL(string: "https://github.com/apple/swift.git")!,
                     sshUrl: "git@github.com:apple/swift.git",
                     language: "Swift",
-                    stargazersCount: 65000,
-                    watchersCount: 65000,
-                    forksCount: 10000,
+                    stargazersCount: 65_000,
+                    watchersCount: 65_000,
+                    forksCount: 10_000,
                     openIssuesCount: 500,
-                    size: 800000,
+                    size: 800_000,
                     defaultBranch: "main",
                     topics: ["swift", "compiler", "llvm", "programming-language"],
                     visibility: "public",
@@ -279,7 +198,7 @@ extension RepositoryDetailFeatureBuilder: DependencyKey {
                     archived: false,
                     disabled: false,
                     isTemplate: false,
-                    createdAt: .now.addingTimeInterval(-86400 * 365 * 10),
+                    createdAt: .now.addingTimeInterval(-86_400 * 365 * 10),
                     updatedAt: .now,
                     pushedAt: .now
                 )
@@ -298,9 +217,9 @@ extension RepositoryDetailFeatureBuilder: DependencyKey {
                     description: "The Swift Programming Language",
                     htmlUrl: URL(string: "https://github.com/apple/swift")!,
                     language: "Swift",
-                    stargazersCount: 65000,
-                    watchersCount: 65000,
-                    forksCount: 10000,
+                    stargazersCount: 65_000,
+                    watchersCount: 65_000,
+                    forksCount: 10_000,
                     openIssuesCount: 500,
                     defaultBranch: "main",
                     createdAt: .now,

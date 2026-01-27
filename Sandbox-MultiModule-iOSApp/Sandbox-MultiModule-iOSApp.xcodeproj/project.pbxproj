@@ -136,6 +136,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		5EA74EFA2F27CA4900C96E36 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -153,7 +154,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nchanged_files=$(git diff --name-only --diff-filter=ACM HEAD | grep '\\.swift$')\necho \"$changed_files\" | xargs --no-run-if-empty \\\n    xcrun --sdk macosx \\\n        swift package \\\n        --package-path ../BuildTools \\\n        plugin \\\n        --allow-writing-to-package-directory \\\n        --allow-writing-to-directory ./ \\\n        swiftlint --config ../.swiftlint.yml --fix --format\n\nxcrun --sdk macosx \\\n    swift package \\\n    --package-path ../BuildTools \\\n    plugin \\\n    --allow-writing-to-package-directory \\\n    --allow-writing-to-directory ./ \\\n    swiftlint --config ../.swiftlint.yml\n";
+			shellScript = "git diff --name-only --line-prefix=\"$(git rev-parse --show-toplevel)/\" \\\n    | grep \"\\.swift$\" \\\n    | xargs --no-run-if-empty \\\n        xcrun --sdk macosx \\\n        swift package \\\n        --package-path ../BuildTools \\\n        plugin \\\n        --allow-writing-to-package-directory \\\n        --allow-writing-to-directory ../ \\\n        swiftlint --config ../.swiftlint.yml --fix --format\n\nxcrun --sdk macosx \\\n    swift package \\\n    --package-path ../BuildTools \\\n    plugin \\\n    --allow-writing-to-package-directory \\\n    --allow-writing-to-directory ../ \\\n    swiftlint --config ../.swiftlint.yml\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

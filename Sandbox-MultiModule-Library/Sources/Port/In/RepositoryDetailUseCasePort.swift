@@ -21,8 +21,8 @@ extension RepositoryDetailUseCase: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    package var repositoryDetailUseCase: RepositoryDetailUseCase {
+package extension DependencyValues {
+    var repositoryDetailUseCase: RepositoryDetailUseCase {
         get { self[RepositoryDetailUseCase.self] }
         set { self[RepositoryDetailUseCase.self] = newValue }
     }

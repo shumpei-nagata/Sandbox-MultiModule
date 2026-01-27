@@ -23,8 +23,8 @@ extension RepositoryDetailFeatureBuilder: TestDependencyKey {
 }
 
 // MARK: - DependencyValues
-extension DependencyValues {
-    public var repositoryDetailFeatureBuilder: RepositoryDetailFeatureBuilder {
+public extension DependencyValues {
+    var repositoryDetailFeatureBuilder: RepositoryDetailFeatureBuilder {
         get { self[RepositoryDetailFeatureBuilder.self] }
         set { self[RepositoryDetailFeatureBuilder.self] = newValue }
     }
