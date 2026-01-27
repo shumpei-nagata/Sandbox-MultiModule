@@ -40,12 +40,14 @@ extension Target {
 
     enum Tests {
         enum Adapter {}
+        enum Feature {}
     }
 }
 
 extension Target.Dependency {
     enum Adapter {}
     enum ExternalLibrary {}
+    enum Feature {}
     enum Infra {}
     enum Port {}
 }
