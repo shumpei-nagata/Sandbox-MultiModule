@@ -14,29 +14,38 @@ import SwiftUI
 struct MainApp: App {
     @Dependency(\.searchRepositoryFeatureBuilder.build)
     private var searchRepositoryView
-    @Dependency(\.repositoryDetailFeaturePlaybookBuilder.build)
-    private var repositoryDetailPlaybook
-    @Dependency(\.searchRepositoryFeaturePlaybookBuilder.build)
-    private var searchRepositoryPlaybook
 
     var body: some Scene {
         WindowGroup {
             TabView {
-                Tab("Search", systemImage: "magnifyingglass") {
+                Tab(
+                    "Search",
+                    systemImage: "magnifyingglass",
+                    role: .search
+                ) {
                     searchRepositoryView()
                 }
 
                 #if DEBUG
-                Tab("Developer", systemImage: "wrench.and.screwdriver") {
+                Tab(
+                    "Developer",
+                    systemImage: "wrench.and.screwdriver"
+                ) {
                     NavigationStack {
                         List {
                             NavigationLink("DesignSystem") {
                                 DesignSystemPlaybook()
                             }
                             NavigationLink("RepositoryDetail") {
+                                @Dependency(\.repositoryDetailFeaturePlaybookBuilder.build)
+                                var repositoryDetailPlaybook
+
                                 repositoryDetailPlaybook()
                             }
                             NavigationLink("SearchRepository") {
+                                @Dependency(\.searchRepositoryFeaturePlaybookBuilder.build)
+                                var searchRepositoryPlaybook
+
                                 searchRepositoryPlaybook()
                             }
                         }

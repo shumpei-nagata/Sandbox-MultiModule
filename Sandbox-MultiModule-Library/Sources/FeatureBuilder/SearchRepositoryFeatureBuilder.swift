@@ -29,6 +29,7 @@ public extension DependencyValues {
     }
 }
 
+#if DEBUG
 @DependencyClient
 public struct SearchRepositoryFeaturePlaybookBuilder: Sendable {
     public var build: @Sendable @MainActor () -> AnyView = {
@@ -46,3 +47,4 @@ public extension DependencyValues {
         set { self[SearchRepositoryFeaturePlaybookBuilder.self] = newValue }
     }
 }
+#endif

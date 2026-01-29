@@ -5,6 +5,7 @@
 //  Created by Shumpei Nagata on 2026/01/27.
 //
 
+#if DEBUG
 import Prefire
 import SwiftUI
 
@@ -18,3 +19,4 @@ public struct DesignSystemPlaybook: View {
 
     public init() {}
 }
+#endif

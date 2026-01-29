@@ -9,7 +9,9 @@ public import Dependencies
 import DesignSystem
 import Domain
 public import FeatureBuilder
+#if DEBUG
 import Prefire
+#endif
 import SwiftUI
 
 // MARK: - SearchRepositoryView
@@ -90,6 +92,7 @@ extension SearchRepositoryFeatureBuilder: DependencyKey {
     }
 }
 
+#if DEBUG
 extension SearchRepositoryFeaturePlaybookBuilder: DependencyKey {
     public static let liveValue = Self {
         .init(
@@ -100,6 +103,7 @@ extension SearchRepositoryFeaturePlaybookBuilder: DependencyKey {
         )
     }
 }
+#endif
 
 // MARK: - Preview
 #Preview("With Results") {

@@ -9,7 +9,9 @@ public import Dependencies
 import DesignSystem
 import Domain
 public import FeatureBuilder
+#if DEBUG
 import Prefire
+#endif
 import SwiftUI
 
 // MARK: - RepositoryDetailView
@@ -154,6 +156,7 @@ extension RepositoryDetailFeatureBuilder: DependencyKey {
     }
 }
 
+#if DEBUG
 extension RepositoryDetailFeaturePlaybookBuilder: DependencyKey {
     public static let liveValue = Self {
         .init(
@@ -164,6 +167,7 @@ extension RepositoryDetailFeaturePlaybookBuilder: DependencyKey {
         )
     }
 }
+#endif
 
 // MARK: - Preview
 #Preview("With Detail") {
